@@ -38,13 +38,13 @@ const Arcade: React.FC = () => {
   const [highScore, setHighScore] = useState(0);
   const [powerTimeLeft, setPowerTimeLeft] = useState(0);
 
-  // Mario Physics Constants
-  const GRAVITY = 0.6;
-  const JUMP_FORCE = -12;
-  const ACCELERATION = 0.08;
-  const FRICTION = 0.92;
-  const MAX_SPEED = 1.2;
-  const POWER_MAX_SPEED = 2.0;
+  // Mario Physics Constants - Tuned for slower, smoother movement
+  const GRAVITY = 0.55;
+  const JUMP_FORCE = -11;
+  const ACCELERATION = 0.04; // Slower buildup
+  const FRICTION = 0.88;     // More grip, stops faster
+  const MAX_SPEED = 0.65;     // Significantly capped normal speed
+  const POWER_MAX_SPEED = 1.1; // Capped power speed
 
   const gameRunning = useRef(false);
   const keys = useRef<{ [key: string]: boolean }>({});
@@ -196,10 +196,10 @@ const Arcade: React.FC = () => {
       // Obstacle Movement & Collision
       obstaclesRef.current.forEach(obs => {
         if (obs.type === 'ground') {
-          obs.x += 0.25 * obs.dir;
+          obs.x += 0.18 * obs.dir; // Slower enemies
           if (Math.abs(obs.x - obs.startX) > obs.range) obs.dir *= -1;
         } else {
-          obs.x += 0.35 * obs.dir;
+          obs.x += 0.25 * obs.dir; // Slower enemies
           if (Math.abs(obs.x - obs.startX) > obs.range) obs.dir *= -1;
           const phase = (obs as any).phase || 0;
           obs.y = 25 + Math.sin(Date.now() / 400 + phase) * 12;
@@ -274,7 +274,7 @@ const Arcade: React.FC = () => {
       <div className="max-w-6xl w-full flex flex-col items-center justify-center relative z-10">
         <header className="text-center mb-10">
           <div className="inline-block bg-black text-white px-6 py-2 font-black uppercase text-xl mb-4 rotate-[-1deg] shadow-[6px_6px_0px_#00A1FF]">
-            NEURAL ARCADE V5.0
+            NEURAL ARCADE V5.1
           </div>
           <h2 className="text-5xl sm:text-7xl md:text-[8rem] font-black uppercase tracking-tighter leading-none">
             ACTION <span className="text-white" style={{ WebkitTextStroke: '2px black', textShadow: '8px 8px 0px #FF4B4B' }}>BASTION</span>
