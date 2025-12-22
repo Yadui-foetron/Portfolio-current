@@ -2,33 +2,33 @@
 import React from 'react';
 
 const FloatingIcons: React.FC = () => {
-  // Characters that move/float
-  const muralCharacters = [
-    { id: 'shinchan-1', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Shinchan&backgroundColor=FFD600', x: '2%', y: '10%', size: '300px', rotate: '-15deg', opacity: 0.15, delay: '0s' },
-    { id: 'doraemon-1', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Doraemon&backgroundColor=00A1FF', x: '80%', y: '15%', size: '350px', rotate: '12deg', opacity: 0.12, delay: '2s' },
-    { id: 'action-bastion', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=ActionBastion&backgroundColor=FF4B4B', x: '5%', y: '45%', size: '280px', rotate: '5deg', opacity: 0.1, delay: '4s' },
-    { id: 'buriburi', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=BuriBuri&backgroundColor=FFD600', x: '85%', y: '50%', size: '250px', rotate: '-8deg', opacity: 0.15, delay: '1s' },
-    { id: 'ninja-hattori', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ninja&backgroundColor=6B4BFF', x: '10%', y: '80%', size: '320px', rotate: '10deg', opacity: 0.12, delay: '3s' },
-    { id: 'gadget-cat', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Gadget1&backgroundColor=00A1FF', x: '75%', y: '85%', size: '280px', rotate: '-12deg', opacity: 0.1, delay: '5s' },
+  // Tech Logos that move/float
+  const techLogos = [
+    { id: 'react', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', x: '2%', y: '10%', size: '200px', rotate: '-15deg', opacity: 0.08, delay: '0s' },
+    { id: 'mongo', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', x: '80%', y: '15%', size: '250px', rotate: '12deg', opacity: 0.08, delay: '2s' },
+    { id: 'python', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', x: '5%', y: '45%', size: '180px', rotate: '5deg', opacity: 0.06, delay: '4s' },
+    { id: 'node', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', x: '85%', y: '50%', size: '150px', rotate: '-8deg', opacity: 0.08, delay: '1s' },
+    { id: 'docker', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', x: '10%', y: '80%', size: '220px', rotate: '10deg', opacity: 0.06, delay: '3s' },
+    { id: 'ts', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', x: '75%', y: '85%', size: '180px', rotate: '-12deg', opacity: 0.05, delay: '5s' },
   ];
 
-  // Static "Printed" Character Stamps
+  // Static Tech Stamps (Subtle printed blueprint layer)
   const stamps = [
-    { seed: 'Hero1', x: '15%', y: '25%' }, { seed: 'Robot', x: '65%', y: '35%' },
-    { seed: 'Funny', x: '45%', y: '5%' }, { seed: 'Nerd', x: '35%', y: '55%' },
-    { seed: 'Cool', x: '75%', y: '65%' }, { seed: 'Ninja2', x: '55%', y: '85%' },
-    { seed: 'Cat', x: '25%', y: '75%' }, { seed: 'Boy', x: '90%', y: '95%' },
-    { seed: 'Star', x: '5%', y: '60%' }, { seed: 'Whiz', x: '95%', y: '10%' },
-    { seed: 'Gadget2', x: '50%', y: '30%' }, { seed: 'Zap', x: '10%', y: '90%' },
-    { seed: 'Pop', x: '88%', y: '40%' }, { seed: 'Bam', x: '30%', y: '15%' },
-    { seed: 'Art', x: '70%', y: '75%' }, { seed: 'Meow', x: '20%', y: '40%' },
+    { name: 'javascript', x: '15%', y: '25%' }, { name: 'postgresql', x: '65%', y: '35%' },
+    { name: 'tailwindcss', x: '45%', y: '5%' }, { name: 'googlecloud', x: '35%', y: '55%' },
+    { name: 'github', x: '75%', y: '65%' }, { name: 'vscode', x: '55%', y: '85%' },
+    { name: 'npm', x: '25%', y: '75%' }, { name: 'linux', x: '90%', y: '95%' },
+    { name: 'firebase', x: '5%', y: '60%' }, { name: 'graphql', x: '95%', y: '10%' },
+    { name: 'rust', x: '50%', y: '30%' }, { name: 'java', x: '10%', y: '90%' },
+    { name: 'figma', x: '88%', y: '40%' }, { name: 'swift', x: '30%', y: '15%' },
+    { name: 'sass', x: '70%', y: '75%' }, { name: 'amazonwebservices', x: '20%', y: '40%' },
   ];
 
   const actionText = [
-    { text: 'POW!', x: '12%', y: '18%', rotate: '-15deg' },
-    { text: 'BAM!', x: '78%', y: '42%', rotate: '12deg' },
-    { text: 'ZAP!', x: '45%', y: '82%', rotate: '-8deg' },
-    { text: 'WHAM!', x: '25%', y: '62%', rotate: '15deg' },
+    { text: 'BUILD!', x: '12%', y: '18%', rotate: '-15deg' },
+    { text: 'DEPLOY!', x: '78%', y: '42%', rotate: '12deg' },
+    { text: 'SCALE!', x: '45%', y: '82%', rotate: '-8deg' },
+    { text: 'DEBUG!', x: '25%', y: '62%', rotate: '15deg' },
   ];
 
   return (
@@ -37,17 +37,18 @@ const FloatingIcons: React.FC = () => {
       <div className="absolute inset-0 halftone-bg opacity-20"></div>
       <div className="absolute inset-0 bg-[radial-gradient(#000_1px,transparent_0)] bg-[size:40px_40px] opacity-[0.05]"></div>
       
-      {/* Mural Stamped Layer (Very subtle, like printed wallpaper) */}
+      {/* Blueprint Stamped Layer */}
       {stamps.map((stamp, i) => (
         <div 
           key={i} 
           className="absolute grayscale opacity-[0.04] saturate-0"
-          style={{ left: stamp.x, top: stamp.y, width: '150px', height: '150px' }}
+          style={{ left: stamp.x, top: stamp.y, width: '100px', height: '100px' }}
         >
           <img 
-            src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${stamp.seed}`} 
+            src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${stamp.name}/${stamp.name}-original.svg`} 
             alt="stamp" 
             className="w-full h-full object-contain"
+            onError={(e) => (e.currentTarget.style.display = 'none')}
           />
         </div>
       ))}
@@ -63,8 +64,8 @@ const FloatingIcons: React.FC = () => {
         </div>
       ))}
 
-      {/* Floating Interactive Characters */}
-      {muralCharacters.map((char) => (
+      {/* Floating Interactive Tech Logos */}
+      {techLogos.map((char) => (
         <div
           key={char.id}
           className="absolute floating select-none transition-all duration-1000"
@@ -81,7 +82,7 @@ const FloatingIcons: React.FC = () => {
           <img 
             src={char.url} 
             alt={char.id} 
-            className="w-full h-full object-contain filter contrast-[0.8]"
+            className="w-full h-full object-contain filter contrast-[0.8] grayscale hover:grayscale-0 transition-all duration-500"
           />
         </div>
       ))}

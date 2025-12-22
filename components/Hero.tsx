@@ -1,9 +1,54 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Hero: React.FC = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 40,
+        y: (e.clientY / window.innerHeight - 0.5) * 40,
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const techStack = [
+    // LEFT SIDE (Now 4 logos)
+    { name: 'React', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg', pos: 'top-[10%] left-[5%]', size: 'w-24 h-24', delay: '0s', factor: 1.2 },
+    { name: 'NodeJS', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', pos: 'bottom-[15%] left-[8%]', size: 'w-24 h-24', delay: '2s', factor: 1.5 },
+    { name: 'TypeScript', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg', pos: 'top-[45%] left-[2%]', size: 'w-16 h-16', delay: '1s', factor: 2.5 },
+    { name: 'GitHub', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', pos: 'bottom-[45%] left-[12%]', size: 'w-20 h-20', delay: '3s', factor: 1.8 },
+    
+    // RIGHT SIDE (4 logos)
+    { name: 'MongoDB', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg', pos: 'top-[15%] right-[8%]', size: 'w-28 h-28', delay: '1.5s', factor: -0.8 },
+    { name: 'Python', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', pos: 'bottom-[10%] right-[12%]', size: 'w-24 h-24', delay: '3.5s', factor: -1.4 },
+    { name: 'Docker', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg', pos: 'top-[50%] right-[3%]', size: 'w-20 h-20', delay: '4s', factor: -2.2 },
+    { name: 'PyTorch', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg', pos: 'bottom-[40%] right-[25%]', size: 'w-16 h-16', delay: '2.5s', factor: 0.5 },
+  ];
+
   return (
     <section className="min-h-[85vh] md:min-h-screen pt-16 md:pt-24 pb-6 px-4 md:px-6 flex flex-col items-center justify-center relative overflow-hidden bg-transparent">
+      {/* Interactive Tech Logos Layer */}
+      {techStack.map((tech, i) => (
+        <div
+          key={i}
+          className={`absolute ${tech.pos} ${tech.size} floating opacity-40 md:opacity-90 z-20 pointer-events-none transition-transform duration-300 ease-out`}
+          style={{ 
+            animationDelay: tech.delay,
+            transform: `translate(${mousePos.x * tech.factor}px, ${mousePos.y * tech.factor}px)`
+          }}
+        >
+          <img 
+            src={tech.url} 
+            alt={tech.name} 
+            className="w-full h-full object-contain filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.2)]" 
+          />
+        </div>
+      ))}
+
       <div className="max-w-6xl w-full text-center z-10">
         <div className="inline-block bg-[#FF4B4B] text-white px-4 md:px-6 py-2 text-sm md:text-base font-black cartoon-btn mb-4 md:mb-6 rotate-[-2deg] shadow-[4px_4px_0px_#000] cursor-default">
           HI! I'M MANISHI YADAV
@@ -21,7 +66,7 @@ const Hero: React.FC = () => {
         
         <p className="max-w-2xl mx-auto text-base md:text-xl lg:text-2xl font-bold mb-6 md:mb-8 text-gray-800 leading-tight px-4">
           Crafting 22nd-century AI gadgets with <br className="hidden md:block" />
-          <span className="bg-[#FFD600] border-2 border-black px-2 inline-block my-1">Action Bastion</span> energy & Doraemon's precision.
+          <span className="bg-[#FFD600] border-2 border-black px-2 inline-block my-1">Action Bastion</span> energy & tech precision.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-6">
@@ -32,14 +77,6 @@ const Hero: React.FC = () => {
             Collaborate
           </a>
         </div>
-      </div>
-      
-      {/* Foreground decorative icons */}
-      <div className="absolute top-[10%] left-[5%] w-16 h-16 md:w-24 md:h-24 floating opacity-20 md:opacity-60 z-20">
-        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Shinchan&backgroundColor=FFD600" alt="Shinchan" className="w-full h-full object-contain filter drop-shadow-lg" />
-      </div>
-      <div className="absolute top-[15%] right-[5%] w-20 h-20 md:w-32 md:h-32 floating opacity-20 md:opacity-60 z-20" style={{ animationDelay: '1.5s' }}>
-        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Doraemon&backgroundColor=00A1FF" alt="Doraemon" className="w-full h-full object-contain filter drop-shadow-lg" />
       </div>
     </section>
   );
