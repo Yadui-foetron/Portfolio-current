@@ -1,4 +1,22 @@
 
+export interface BlogSection {
+  type: 'text' | 'markdown' | 'image' | 'code' | 'note';
+  content: string;
+  caption?: string;
+  language?: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  content?: string; // Legacy support
+  sections?: BlogSection[];
+  category: string;
+  color: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -19,15 +37,5 @@ export interface Achievement {
   issuer: string;
   date: string;
   icon: string;
-  color: string;
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  date: string;
-  excerpt: string;
-  content: string;
-  category: string;
   color: string;
 }

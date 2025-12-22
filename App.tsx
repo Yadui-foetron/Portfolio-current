@@ -44,9 +44,8 @@ const App: React.FC = () => {
 
     if (view !== newView) {
       setView(newView);
-      if (!sectionId) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      // Ensure we go to top when switching views
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else if (sectionId) {
       const element = document.getElementById(sectionId);
       element?.scrollIntoView({ behavior: 'smooth' });
@@ -57,11 +56,11 @@ const App: React.FC = () => {
 
   const handleLoginSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (passwordInput === 'password') { 
+    if (passwordInput === '1234') { 
       setView('admin');
       setShowLoginModal(false);
       setPasswordInput('');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
       alert("WRONG CODE! Ninja Hattori is watching you! 🥷");
       setPasswordInput('');
@@ -142,7 +141,7 @@ const App: React.FC = () => {
               ×
             </button>
             <h2 className="text-4xl font-black uppercase mb-6 tracking-tighter italic">Top Secret <br/> <span className="text-blue-600 underline">Access Required</span></h2>
-            <p className="font-bold text-gray-600 mb-8">Enter the secret command to enter the Lab.</p>
+            <p className="font-bold text-gray-600 mb-8">Enter the secret command to enter the Lab. Hint: 1234</p>
             <form onSubmit={handleLoginSubmit} className="space-y-6">
               <input 
                 autoFocus

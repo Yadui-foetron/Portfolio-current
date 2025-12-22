@@ -65,31 +65,33 @@ export const ACHIEVEMENTS: Achievement[] = [
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    id: 'guide',
+    title: 'Action Bastion Guide to Blogging',
+    date: 'Jan 20, 2025',
+    excerpt: 'Learn how to use Images, Code, and Notes in your custom blog entries!',
+    category: 'Documentation',
+    color: '#FFD600',
+    sections: [
+      { type: 'text', content: 'Welcome to your rich-content editor! Below are examples of everything you can build using the JSON sections in the admin panel.' },
+      { type: 'note', content: 'Pro-Tip: You can find the JSON templates for these blocks by clicking "VIEW BLUEPRINT MANUAL" in the Admin Lab!' },
+      { type: 'image', content: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200', caption: 'High-tech gadgets for your blog posts.' },
+      { type: 'text', content: 'You can also drop code snippets that look like real 22nd-century terminals:' },
+      { type: 'code', content: 'const powerUp = () => {\n  console.log("ACTION BASTION!!!");\n  return "🚀 Ready for deployment!";\n};', language: 'javascript' },
+      { type: 'text', content: 'Every section is framed with neubrutalist borders to keep that premium Awwwards cartoon aesthetic.' }
+    ]
+  },
+  {
     id: '1',
     title: 'The Secret Life of LLMs',
     date: 'Oct 12, 2024',
     excerpt: 'Exploring how hidden states in transformers resemble 90s cartoon logic.',
-    content: 'Transformers are essentially vast neural stages where attention mechanisms act as directors, deciding which parts of the input script get the spotlight. Much like a 90s cartoon, where physics can be rewritten for a gag, LLMs can reshape context and meaning through their high-dimensional vector spaces.',
     category: 'AI Research',
-    color: '#FF4B4B'
-  },
-  {
-    id: '2',
-    title: 'Doraemon\'s Pocket: A RAG Story',
-    date: 'Sept 28, 2024',
-    excerpt: 'How to build retrieval systems that feel like magic gadget pockets.',
-    content: 'Retrieval-Augmented Generation (RAG) is the technological equivalent of Doraemon\'s 4D pocket. Instead of storing every possible gadget inside the model weights, we use a vector database to fetch the exact tool needed for the current situation. This allows for an infinitely expandable knowledge base without the overhead of massive parameter counts.',
-    category: 'Engineering',
-    color: '#00A1FF'
-  },
-  {
-    id: '3',
-    title: 'Shinchan\'s Guide to Prompting',
-    date: 'Aug 15, 2024',
-    excerpt: 'Mischievous techniques for getting the most out of large language models.',
-    content: 'Mischievous prompting involves understanding the model\'s quirks and using creative, high-energy language to steer it away from robotic responses. By treating the AI like a playful companion rather than a sterile machine, we can unlock emergent behaviors that are both surprising and highly effective for creative tasks.',
-    category: 'Prompt Eng',
-    color: '#FFD600'
+    color: '#FF4B4B',
+    sections: [
+      { type: 'text', content: 'Transformers are essentially vast neural stages where attention mechanisms act as directors.' },
+      { type: 'image', content: 'https://images.unsplash.com/photo-1620712943543-bcc4628c71d0?auto=format&fit=crop&q=80&w=1200', caption: 'Neural networks visualizing patterns.' },
+      { type: 'note', content: 'Attention is all you need, but a good cape helps too!' }
+    ]
   }
 ];
 

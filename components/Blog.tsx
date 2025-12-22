@@ -1,7 +1,58 @@
 
 import React, { useState, useEffect } from 'react';
 import { getBlogs } from '../services/dataService';
-import { BlogPost } from '../types';
+import { BlogPost, BlogSection } from '../types';
+
+const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
+  switch (section.type) {
+    case 'text':
+    case 'markdown':
+      return <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-8">{section.content}</p>;
+    
+    case 'image':
+      return (
+        <div className="my-12">
+          <div className="border-[6px] border-black shadow-[15px_15px_0px_#00A1FF] overflow-hidden bg-white rotate-1">
+            <img src={section.content} alt={section.caption} className="w-full h-auto object-cover" />
+          </div>
+          {section.caption && (
+            <div className="mt-4 bg-black text-white px-4 py-2 inline-block font-black uppercase text-sm -rotate-1">
+              FIG: {section.caption}
+            </div>
+          )}
+        </div>
+      );
+
+    case 'code':
+      return (
+        <div className="my-10 bg-[#1A1A1A] border-[4px] border-black rounded-xl overflow-hidden shadow-[10px_10px_0px_#000] relative">
+          <div className="bg-white border-b-4 border-black px-4 py-2 flex items-center justify-between">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 bg-red-500 rounded-full border-2 border-black"></div>
+              <div className="w-3 h-3 bg-yellow-400 rounded-full border-2 border-black"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
+            </div>
+            <span className="font-black text-xs uppercase tracking-widest">{section.language || 'Terminal'}</span>
+          </div>
+          <pre className="p-6 overflow-x-auto">
+            <code className="text-[#00FF41] font-mono text-lg">{section.content}</code>
+          </pre>
+        </div>
+      );
+
+    case 'note':
+      return (
+        <div className="my-10 bg-[#FFD600] border-[4px] border-black p-8 shadow-[10px_10px_0px_#000] -rotate-1 relative group hover:rotate-0 transition-transform">
+          <div className="absolute -top-6 -left-6 text-5xl group-hover:scale-125 transition-transform">📌</div>
+          <h4 className="font-black uppercase text-xl mb-2 underline decoration-4">Gadget Insight:</h4>
+          <p className="font-bold text-xl italic">{section.content}</p>
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};
 
 const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -12,6 +63,13 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setBlogs(getBlogs());
   }, []);
 
+  // FIXED: Scroll to top when opening a post
+  useEffect(() => {
+    if (selectedPost) {
+      window.scrollTo(0, 0);
+    }
+  }, [selectedPost]);
+
   const filteredBlogs = blogs.filter(b => 
     b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     b.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -19,36 +77,54 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
   if (selectedPost) {
     return (
-      <div className="min-h-screen bg-white pt-32 pb-20 px-6 animate-in fade-in duration-500">
+      <div className="min-h-screen bg-white pt-32 pb-20 px-6 animate-in slide-in-from-bottom duration-500">
         <div className="max-w-4xl mx-auto">
           <button 
             onClick={() => setSelectedPost(null)}
-            className="cartoon-btn bg-black text-white px-6 py-2 font-black mb-12 uppercase"
+            className="cartoon-btn bg-black text-white px-6 py-3 font-black mb-12 uppercase text-xl"
           >
-            ← Back to Logs
+            ← BACK TO LOGS
           </button>
           
-          <div className="mb-12">
-            <span className="px-4 py-1 bg-yellow-400 border-2 border-black font-black uppercase text-sm">
+          <div className="mb-16">
+            <span className="px-6 py-2 bg-[#FF4B4B] text-white border-4 border-black font-black uppercase text-lg shadow-[6px_6px_0px_#000] inline-block -rotate-2">
               {selectedPost.category}
             </span>
-            <h1 className="text-5xl md:text-7xl font-black uppercase mt-6 leading-none">
+            <h1 className="text-5xl md:text-8xl font-black uppercase mt-8 leading-[0.85] tracking-tighter">
               {selectedPost.title}
             </h1>
-            <p className="text-gray-500 font-bold mt-4">{selectedPost.date}</p>
+            <div className="flex items-center gap-4 mt-6">
+              <div className="w-12 h-12 bg-[#FFD600] border-4 border-black rounded-full flex items-center justify-center font-black">MY</div>
+              <p className="text-gray-500 font-black uppercase text-sm tracking-widest">{selectedPost.date}</p>
+            </div>
           </div>
 
-          <div className="prose prose-2xl max-w-none font-medium text-gray-800 leading-relaxed space-y-8">
-            {selectedPost.content ? (
-              selectedPost.content.split('\n').map((para, i) => (
-                <p key={i} className="mb-6">{para}</p>
+          <div className="space-y-4">
+            {selectedPost.sections ? (
+              selectedPost.sections.map((section, i) => (
+                <SectionRenderer key={i} section={section} />
               ))
             ) : (
-              <p>{selectedPost.excerpt}</p>
+              selectedPost.content?.split('\n').map((para, i) => (
+                <p key={i} className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-8">{para}</p>
+              ))
             )}
-            <p className="pt-12 border-t-4 border-black text-center font-black italic">
-              -- END OF LOG ENTRY --
-            </p>
+            
+            <div className="pt-20 mt-20 border-t-[8px] border-black text-center">
+              <div className="text-8xl mb-4">🏮</div>
+              <p className="font-black uppercase text-2xl tracking-tighter italic">
+                Transmission Terminated.
+              </p>
+              <button 
+                onClick={() => {
+                  setSelectedPost(null);
+                  window.scrollTo(0, 0);
+                }}
+                className="mt-8 cartoon-btn bg-[#FFD600] text-black px-12 py-4 font-black uppercase text-2xl"
+              >
+                RETURN TO LAB
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -72,24 +148,23 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </header>
           
           <div className="w-full md:w-96">
-            <label className="block font-black uppercase text-xs mb-2">Search Gadgets & Intel</label>
+            <label className="block font-black uppercase text-xs mb-2 text-black">Search Gadgets & Intel</label>
             <input 
               type="text" 
               placeholder="Filter by title or tag..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-4 border-4 border-black shadow-[4px_4px_0px_#000] focus:outline-none focus:shadow-none transition-all font-bold"
+              className="w-full p-4 border-4 border-black shadow-[4px_4px_0px_#000] focus:outline-none focus:shadow-none transition-all font-bold text-black"
             />
           </div>
         </div>
 
-        {/* Space on page */}
-        <div className="mb-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {filteredBlogs.length > 0 ? filteredBlogs.map((post) => (
             <div 
               key={post.id}
               onClick={() => setSelectedPost(post)}
-              className="bg-white border-[6px] border-black shadow-[10px_10px_0px_#000] p-8 flex flex-col hover:-translate-y-2 hover:shadow-[15px_15px_0px_#000] transition-all cursor-pointer group"
+              className="bg-white border-[6px] border-black shadow-[10px_10px_0px_#000] p-8 flex flex-col hover:-translate-y-2 hover:shadow-[15px_15px_0px_#000] transition-all cursor-pointer group h-full"
             >
               <div 
                 className="w-full h-12 mb-6 border-b-4 border-black font-black uppercase flex items-center justify-between"
@@ -98,21 +173,21 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <span>{post.category}</span>
                 <span className="text-xs text-gray-400">{post.date}</span>
               </div>
-              <h3 className="text-3xl font-black uppercase mb-4 leading-tight group-hover:text-[#FF4B4B] transition-colors">
+              <h3 className="text-3xl font-black uppercase mb-4 leading-tight group-hover:text-[#FF4B4B] transition-colors text-black">
                 {post.title}
               </h3>
               <p className="text-gray-700 font-bold mb-8 flex-1">
                 {post.excerpt}
               </p>
               <div className="flex justify-between items-center">
-                <span className="font-black text-xs uppercase underline decoration-2">Read Decrypted File</span>
+                <span className="font-black text-xs uppercase underline decoration-2 text-black">Read Decrypted File</span>
                 <div className="w-10 h-10 bg-black text-white flex items-center justify-center font-black">→</div>
               </div>
             </div>
           )) : (
             <div className="col-span-full py-40 text-center border-8 border-dashed border-black/10">
               <div className="text-8xl mb-4 grayscale opacity-20">📂</div>
-              <h3 className="text-4xl font-black uppercase opacity-20">Log file not found!</h3>
+              <h3 className="text-4xl font-black uppercase opacity-20 text-black">Log file not found!</h3>
             </div>
           )}
         </div>

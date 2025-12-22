@@ -38,8 +38,9 @@ const Arcade: React.FC = () => {
   const [highScore, setHighScore] = useState(0);
   const [powerTimeLeft, setPowerTimeLeft] = useState(0);
 
-  const GRAVITY = 0.55;
-  const JUMP_FORCE = -11;
+  // PHYSICS TWEAKS
+  const GRAVITY = 0.6; // Increased from 0.55 for faster falling
+  const JUMP_FORCE = -9; // Reduced from -11 for a shorter, more controlled jump
   const ACCELERATION = 0.04;
   const FRICTION = 0.88;
   const MAX_SPEED = 0.65;
@@ -166,8 +167,9 @@ const Arcade: React.FC = () => {
         p.isJumping = true;
       }
 
-      if (!isJumpPressed && p.vy < -3) {
-        p.vy *= 0.5;
+      // Variable jump height: release jump button to stop upward momentum
+      if (!isJumpPressed && p.vy < -2) {
+        p.vy *= 0.6;
       }
 
       p.vy += GRAVITY;

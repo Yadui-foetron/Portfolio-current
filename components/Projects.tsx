@@ -22,7 +22,7 @@ const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index: number }> = ({
   return (
     <div 
       onMouseMove={handleMouseMove}
-      className="flex-shrink-0 w-[90vw] h-[80vh] flex items-center justify-center px-4 md:px-12 relative group"
+      className="flex-shrink-0 w-[90vw] h-[75vh] md:h-[80vh] flex items-center justify-center px-4 md:px-12 relative group"
       style={{ perspective: '2000px' }}
     >
       <div 
@@ -31,16 +31,16 @@ const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index: number }> = ({
           transform: `rotateX(${mousePos.y * -3}deg) rotateY(${mousePos.x * 5}deg)`
         }}
       >
-        <div className="absolute -top-10 left-0 text-[15rem] md:text-[25rem] font-black text-black opacity-[0.03] select-none pointer-events-none leading-none z-0">
+        <div className="absolute -top-10 left-0 text-[12rem] md:text-[25rem] font-black text-black opacity-[0.03] select-none pointer-events-none leading-none z-0">
           0{index + 1}
         </div>
 
-        <div className="relative w-full md:w-[65%] h-[50%] md:h-[85%] z-20 group/img">
-           <div className="absolute -top-6 left-10 bg-black text-[#FFD600] px-6 py-1 font-black uppercase text-xs skew-x-[-15deg] border-t-2 border-x-2 border-black z-30">
+        <div className="relative w-full md:w-[65%] h-[45%] md:h-[85%] z-20 group/img">
+           <div className="absolute -top-4 md:-top-6 left-6 md:left-10 bg-black text-[#FFD600] px-4 md:px-6 py-1 font-black uppercase text-[10px] md:text-xs skew-x-[-15deg] border-t-2 border-x-2 border-black z-30">
               SCHEMA_DATA_{index + 1}
            </div>
 
-           <div className="absolute inset-0 bg-white border-[6px] md:border-[10px] border-black shadow-[15px_15px_0px_#000] overflow-hidden group-hover/img:shadow-[5px_5px_0px_#000] transition-all">
+           <div className="absolute inset-0 bg-white border-[4px] md:border-[10px] border-black shadow-[10px_10px_0px_#000] md:shadow-[15px_15px_0px_#000] overflow-hidden group-hover/img:shadow-[5px_5px_0px_#000] transition-all">
               <img 
                 src={project.image} 
                 alt={project.title} 
@@ -50,19 +50,19 @@ const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index: number }> = ({
            </div>
         </div>
 
-        <div className="w-full md:w-[45%] bg-white border-[6px] border-black p-8 md:p-12 shadow-[15px_15px_0px_#00A1FF] z-40 md:-ml-20 transform -rotate-1 group-hover:rotate-0 transition-all">
-           <h3 className="text-4xl md:text-7xl font-black uppercase leading-[0.85] mb-6 tracking-tighter text-black">
+        <div className="w-full md:w-[45%] bg-white border-[4px] md:border-[6px] border-black p-6 md:p-12 shadow-[10px_10px_0px_#00A1FF] md:shadow-[15px_15px_0px_#00A1FF] z-40 md:-ml-20 transform -rotate-1 group-hover:rotate-0 transition-all">
+           <h3 className="text-3xl md:text-7xl font-black uppercase leading-[0.85] mb-4 md:mb-6 tracking-tighter text-black">
              {project.title}
            </h3>
-           <div className="bg-yellow-50 border-2 border-dashed border-black/20 p-4 mb-8 relative">
-              <Scribble className="w-12 text-[#FF4B4B] -top-4 -right-2" />
-              <p className="font-bold text-gray-800 italic leading-tight text-lg md:text-xl">
+           <div className="bg-yellow-50 border-2 border-dashed border-black/20 p-3 md:p-4 mb-6 md:mb-8 relative">
+              <Scribble className="w-10 md:w-12 text-[#FF4B4B] -top-3 -right-1" />
+              <p className="font-bold text-gray-800 italic leading-tight text-base md:text-xl">
                 "{project.description}"
               </p>
            </div>
-           <div className="flex flex-wrap gap-2 mb-10">
+           <div className="flex flex-wrap gap-2 mb-6 md:mb-10">
               {project.tags.map(tag => (
-                <span key={tag} className="bg-black text-white px-3 py-1 text-xs font-black uppercase tracking-tighter border-2 border-black">
+                <span key={tag} className="bg-black text-white px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-black uppercase tracking-tighter border-2 border-black">
                   {tag}
                 </span>
               ))}
@@ -70,10 +70,10 @@ const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index: number }> = ({
            <a 
               href="#"
               onClick={(e) => e.preventDefault()}
-              className="cartoon-btn w-full bg-[#FFD600] group/btn flex items-center justify-center gap-4 py-5 font-black text-2xl uppercase border-4 border-black shadow-[10px_10px_0px_#000] hover:bg-black hover:text-[#FFD600] transition-all active:translate-y-1 active:shadow-none"
+              className="cartoon-btn w-full bg-[#FFD600] group/btn flex items-center justify-center gap-2 md:gap-4 py-3 md:py-5 font-black text-lg md:text-2xl uppercase border-4 border-black shadow-[6px_6px_0px_#000] md:shadow-[10px_10px_0px_#000] hover:bg-black hover:text-[#FFD600] transition-all active:translate-y-1 active:shadow-none"
            >
               VIEW PROJECT
-              <span className="text-4xl group-hover/btn:translate-x-3 transition-transform">→</span>
+              <span className="text-2xl md:text-4xl group-hover/btn:translate-x-3 transition-transform">→</span>
            </a>
         </div>
       </div>
@@ -91,7 +91,6 @@ const Projects: React.FC = () => {
       const rect = sectionRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const totalDist = rect.height - windowHeight;
-      // Ensure progress starts at 0 and ends at 1
       const progress = Math.min(Math.max(-rect.top / totalDist, 0), 1);
       setScrollProgress(progress);
     };
@@ -99,11 +98,6 @@ const Projects: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // THREE-PHASE SCROLL LOGIC
-  // 1. ARRIVAL: 0.00 -> 0.20 (Nothing moves, title centered)
-  // 2. PINNING: 0.20 -> 0.45 (Title moves to sidebar)
-  // 3. GALLERY: 0.45 -> 1.00 (Gallery scrolls horizontally)
 
   let pinProgress = 0;
   if (scrollProgress > 0.20) {
@@ -115,14 +109,10 @@ const Projects: React.FC = () => {
     galleryProgress = Math.min((scrollProgress - 0.45) / 0.55, 1);
   }
 
-  // Animation values for the "WORKS" title
-  const titleX = 50 - (pinProgress * 44); // 50% (center) -> 6% (sidebar)
-  const titleScale = 1 - (pinProgress * 0.55); // 1.0 -> 0.45
-  const titleRotation = pinProgress * -90; // 0deg -> -90deg
+  const titleX = 50 - (pinProgress * 44);
+  const titleScale = 1 - (pinProgress * 0.55);
+  const titleRotation = pinProgress * -90;
   
-  // Math to prevent empty space:
-  // (3 projects * 90vw) + 1 fin_card (50vw) + 10vw gap = ~330vw total content
-  // We start translation from 100vw. We want to end at -230vw so the right edge is at 100vw.
   const translationDistance = 330; 
   const currentTranslate = 100 - (galleryProgress * translationDistance);
 
@@ -132,7 +122,6 @@ const Projects: React.FC = () => {
       id="projects" 
       className="relative h-[600vh] bg-[#FFF9E6] border-y-8 border-black"
     >
-      {/* Background Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none sticky top-0 h-screen"
            style={{ backgroundImage: `linear-gradient(#000 2px, transparent 2px), linear-gradient(90deg, #000 2px, transparent 2px)`, 
                     backgroundSize: '80px 80px' }}>
@@ -140,7 +129,7 @@ const Projects: React.FC = () => {
 
       <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
         
-        {/* THE "WORKS" HEADER */}
+        {/* THE "WORKS" HEADER - RESPONSIVE SIZING */}
         <div 
           className="absolute z-[60] pointer-events-none flex items-center justify-center whitespace-nowrap"
           style={{ 
@@ -151,16 +140,15 @@ const Projects: React.FC = () => {
           }}
         >
           <div className="relative">
-            <h2 className="text-[10rem] md:text-[18rem] lg:text-[22rem] font-black uppercase tracking-tighter leading-none italic">
-                W<span className="text-white" style={{ WebkitTextStroke: '5px black', textShadow: '12px 12px 0px #FF4B4B' }}>OR</span>KS
+            <h2 className="text-[5.5rem] sm:text-[10rem] md:text-[15rem] lg:text-[18rem] xl:text-[22rem] font-black uppercase tracking-tighter leading-none italic">
+                W<span className="text-white" style={{ WebkitTextStroke: 'clamp(2px, 0.5vw, 5px) black', textShadow: 'clamp(6px, 1vw, 12px) clamp(6px, 1vw, 12px) 0px #FF4B4B' }}>OR</span>KS
             </h2>
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[115%] h-[45%] bg-[#FFD600] border-y-8 border-black -rotate-1 -z-10 shadow-[25px_25px_0px_#000]"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[45%] bg-[#FFD600] border-y-4 md:border-y-8 border-black -rotate-1 -z-10 shadow-[10px_10px_0px_#000] md:shadow-[25px_25px_0px_#000]"
             ></div>
           </div>
         </div>
 
-        {/* PROJECTS ROW - Hides until Act 2 begins to keep focus on Banner */}
         <div 
           className="flex items-center h-full transition-all duration-75 ease-out"
           style={{ 
@@ -174,14 +162,13 @@ const Projects: React.FC = () => {
           ))}
           
           <div className="flex-shrink-0 w-[50vw] flex items-center justify-center ml-10">
-            <div className="bg-white border-[12px] border-black p-12 md:p-16 rotate-3 shadow-[30px_30px_0px_#FFD600] text-center">
-              <h4 className="text-5xl md:text-8xl font-black uppercase tracking-tighter italic mb-4">FIN_DATA</h4>
-              <p className="font-bold text-xl md:text-2xl uppercase tracking-widest text-[#FF4B4B]">Sequence Complete!</p>
+            <div className="bg-white border-[8px] md:border-[12px] border-black p-8 md:p-16 rotate-3 shadow-[15px_15px_0px_#FFD600] md:shadow-[30px_30px_0px_#FFD600] text-center">
+              <h4 className="text-4xl md:text-8xl font-black uppercase tracking-tighter italic mb-2 md:mb-4">FIN_DATA</h4>
+              <p className="font-bold text-sm md:text-2xl uppercase tracking-widest text-[#FF4B4B]">Sequence Complete!</p>
             </div>
           </div>
         </div>
 
-        {/* PROGRESS INDICATOR */}
         <div className="absolute bottom-12 right-12 flex flex-col items-end gap-2 z-[70] pointer-events-none">
            <span className="font-black uppercase text-[10px] tracking-widest bg-black text-white px-3 py-1">
              {scrollProgress < 0.2 ? 'System Ready' : scrollProgress < 0.45 ? 'Syncing...' : `Intel: ${Math.round(galleryProgress * 100)}%`}
