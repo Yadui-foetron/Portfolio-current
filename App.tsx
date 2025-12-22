@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
@@ -16,14 +16,45 @@ const App: React.FC = () => {
   const [view, setView] = useState<'home' | 'blog' | 'admin'>('home');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  const [targetSection, setTargetSection] = useState<string | null>(null);
 
-  const handleNavigate = (newView: 'home' | 'blog' | 'admin') => {
+  // Handle scrolling to a specific section after the home view is rendered
+  useEffect(() => {
+    if (view === 'home' && targetSection) {
+      const timer = setTimeout(() => {
+        const element = document.getElementById(targetSection);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          setTargetSection(null);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [view, targetSection]);
+
+  const handleNavigate = (newView: 'home' | 'blog' | 'admin', sectionId?: string) => {
     if (newView === 'admin') {
       setShowLoginModal(true);
       return;
     }
-    setView(newView);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (sectionId) {
+      setTargetSection(sectionId);
+    }
+
+    if (view !== newView) {
+      setView(newView);
+      // Only scroll to top if we're not targeting a specific section
+      if (!sectionId) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else if (sectionId) {
+      // Already on the right view, just scroll
+      const element = document.getElementById(sectionId);
+      element?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleLoginSubmit = (e?: React.FormEvent) => {
@@ -85,8 +116,8 @@ const App: React.FC = () => {
             </section>
           </>
         )}
-        {view === 'blog' && <Blog onBack={() => setView('home')} />}
-        {view === 'admin' && <Admin onBack={() => setView('home')} />}
+        {view === 'blog' && <Blog onBack={() => handleNavigate('home')} />}
+        {view === 'admin' && <Admin onBack={() => handleNavigate('home')} />}
       </main>
 
       <Footer onNavigate={handleNavigate} />
@@ -123,7 +154,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Improved Secret Door Trigger - High Z-index and explicit positioning */}
+      {/* Improved Secret Door Trigger */}
       <div className="fixed bottom-0 left-0 z-[250] p-4 group">
         <button 
           onClick={() => handleNavigate('admin')}
