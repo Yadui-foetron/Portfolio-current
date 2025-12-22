@@ -21,44 +21,80 @@
             background: #fff;
             border: 4px solid #000;
             box-shadow: 6px 6px 0px #000;
-            transition: all 0.1s ease;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .cartoon-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 8px 8px 0px #000;
+            transform: translate(-3px, -3px);
+            box-shadow: 10px 10px 0px #000;
         }
         .cartoon-btn:active {
-            transform: translate(4px, 4px);
+            transform: translate(6px, 6px);
             box-shadow: 0px 0px 0px #000;
         }
 
-        /* Project Scroll Animations */
-        .project-row:nth-child(even) {
-            flex-direction: row-reverse;
+        /* CRT Screen Effect */
+        .crt-screen {
+            position: relative;
+            overflow: hidden;
+            background: #111;
+            border: 10px solid #222;
         }
-
-        @keyframes slide-in-left {
-            from { transform: translateX(-100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slide-in-right {
-            from { transform: translateX(100px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .animate-project-left { animation: slide-in-left 1s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-        .animate-project-right { animation: slide-in-right 1s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-
-        .parallax-text {
-            transition: transform 0.1s ease-out;
+        .crt-screen::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 10;
+            background-size: 100% 2px, 3px 100%;
             pointer-events: none;
         }
+        .crt-screen::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.27861; }
+            5% { opacity: 0.34769; }
+            10% { opacity: 0.23604; }
+            100% { opacity: 0.2; }
+        }
 
-        ::-webkit-scrollbar { width: 12px; }
+        /* Halftone Pattern for high-end look */
+        .halftone-bg {
+            background-image: radial-gradient(#000 1.2px, transparent 0);
+            background-size: 18px 18px;
+            opacity: 0.08;
+        }
+
+        .floating {
+            animation: float 6s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(10px, -20px) rotate(5deg); }
+            66% { transform: translate(-10px, 15px) rotate(-5deg); }
+        }
+
+        .nav-hidden { transform: translate(-50%, -150%); }
+        .nav-visible { transform: translate(-50%, 0); }
+
+        ::-webkit-scrollbar { width: 14px; }
         ::-webkit-scrollbar-track { background: #FFD600; }
-        ::-webkit-scrollbar-thumb { background: #000; border: 3px solid #FFD600; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #000; border: 4px solid #FFD600; border-radius: 10px; }
     </style>
     <script type="importmap">
 {

@@ -6,6 +6,8 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import FloatingIcons from './components/FloatingIcons';
 import GeminiBot from './components/GeminiBot';
+import Arcade from './components/Arcade';
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   return (
@@ -41,9 +43,13 @@ const App: React.FC = () => {
         </section>
 
         <Projects />
+        
+        {/* New interactive Arcade section */}
+        <Arcade />
+        
         <Skills />
 
-        <section id="contact" className="py-40 px-6 text-center bg-[#FF4B4B] relative z-10 border-t-8 border-black text-white">
+        <section id="contact-banner" className="py-40 px-6 text-center bg-[#FF4B4B] relative z-10 border-t-8 border-black text-white">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-7xl md:text-9xl font-black uppercase mb-12 leading-none">
               Deploy <br /> <span className="text-[#FFD600]" style={{ WebkitTextStroke: '2px black' }}>With Me</span>
@@ -57,20 +63,11 @@ const App: React.FC = () => {
             >
               Email Manishi
             </a>
-            
-            <div className="mt-32 flex justify-center gap-16 font-black text-3xl uppercase underline decoration-8">
-              <a href="#" className="hover:text-yellow-400 transition-colors">GitHub</a>
-              <a href="#" className="hover:text-blue-400 transition-colors">X (Twitter)</a>
-              <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
-            </div>
           </div>
         </section>
       </main>
 
-      <footer className="py-12 bg-black text-white text-center font-black tracking-[0.3em] text-sm uppercase">
-        © {new Date().getFullYear()} MANISHI YADAV — BUILT WITH GEN-AI MAGIC
-      </footer>
-
+      <Footer />
       <GeminiBot />
     </div>
   );

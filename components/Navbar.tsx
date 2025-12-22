@@ -1,23 +1,42 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Navbar: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl">
-      <div className="bg-white cartoon-border px-8 py-4 flex items-center justify-between">
-        <div className="text-2xl font-bold tracking-tighter flex items-center gap-2">
-          <span className="w-8 h-8 bg-yellow-400 border-2 border-black rounded-full inline-block"></span>
-          CARTOON_DEV
+    <nav className={`fixed top-6 left-1/2 z-50 w-[90%] max-w-5xl transition-all duration-500 ease-in-out ${isVisible ? 'nav-visible' : 'nav-hidden'}`}>
+      <div className="bg-white border-[4px] border-black shadow-[8px_8px_0px_#000] px-8 py-4 flex items-center justify-between">
+        <div className="text-2xl font-black tracking-tighter flex items-center gap-3">
+          <div className="w-10 h-10 bg-[#FFD600] border-4 border-black rounded-full flex items-center justify-center font-black">
+            MY
+          </div>
+          <span className="hidden sm:inline">MANISHI YADAV</span>
         </div>
-        <div className="hidden md:flex items-center gap-8 font-medium">
-          <a href="#about" className="hover:text-yellow-500 transition-colors uppercase">About</a>
-          <a href="#projects" className="hover:text-blue-500 transition-colors uppercase">Projects</a>
-          <a href="#skills" className="hover:text-red-500 transition-colors uppercase">Skills</a>
+        <div className="flex items-center gap-4 sm:gap-10 font-black uppercase text-sm sm:text-base">
+          <a href="#about" className="hover:text-blue-600 transition-colors">About</a>
+          <a href="#projects" className="hover:text-red-500 transition-colors">Works</a>
           <a 
-            href="#contact" 
-            className="bg-black text-white px-6 py-2 rounded-full hover:bg-yellow-400 hover:text-black transition-all"
+            href="mailto:monty.my1234@gmail.com" 
+            className="cartoon-btn bg-black text-white px-6 py-2 rounded-none hover:bg-[#FFD600] hover:text-black shadow-none active:translate-y-1"
           >
-            LET'S TALK
+            PING ME!
           </a>
         </div>
       </div>
