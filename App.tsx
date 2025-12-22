@@ -57,7 +57,7 @@ const App: React.FC = () => {
 
   const handleLoginSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (passwordInput === 'password') { // Changed for demo, should be more secure in real apps
+    if (passwordInput === 'password') { 
       setView('admin');
       setShowLoginModal(false);
       setPasswordInput('');
@@ -78,19 +78,19 @@ const App: React.FC = () => {
           <>
             <Hero />
             
-            <section id="about" className="py-32 px-6 bg-white/40 backdrop-blur-[2px] border-y-8 border-black relative z-10 overflow-hidden">
-              <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16">
+            <section id="about" className="pt-20 pb-0 px-6 bg-white/40 backdrop-blur-[2px] border-t-8 border-black relative z-10 overflow-hidden">
+              <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16 pb-0">
                 <div className="w-full md:w-1/3 aspect-square cartoon-border overflow-hidden rotate-[-3deg] hover:rotate-0 transition-transform bg-[#FF4B4B] border-4 border-black shadow-[8px_8px_0px_#000]">
                    <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ManishiYadav&backgroundColor=FF4B4B" alt="Manishi Yadav" className="w-full h-full scale-110" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 pb-16 md:pb-20">
                   <div className="inline-block px-6 py-2 bg-yellow-400 border-4 border-black font-black uppercase text-xl mb-8 transform -rotate-1">
                     The Architect
                   </div>
                   <p className="text-3xl md:text-5xl font-black leading-tight mb-8">
                     I build machines that <span className="text-blue-600 underline decoration-8">imagine</span> things.
                   </p>
-                  <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-12">
+                  <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed">
                     Manishi Yadav here! Based in the digital clouds. I turn complex neural architectures into playful, robust tools that feel as intuitive as Doraemon's magic pocket gadgets.
                   </p>
                 </div>
@@ -103,7 +103,6 @@ const App: React.FC = () => {
               <Achievements />
             </div>
 
-            {/* Ninja Stats now comes BEFORE Arcade */}
             <div className="bg-[#00A1FF]/40 backdrop-blur-sm">
               <Skills />
             </div>

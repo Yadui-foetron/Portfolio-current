@@ -38,13 +38,12 @@ const Arcade: React.FC = () => {
   const [highScore, setHighScore] = useState(0);
   const [powerTimeLeft, setPowerTimeLeft] = useState(0);
 
-  // Mario Physics Constants - Tuned for slower, smoother movement
   const GRAVITY = 0.55;
   const JUMP_FORCE = -11;
-  const ACCELERATION = 0.04; // Slower buildup
-  const FRICTION = 0.88;     // More grip, stops faster
-  const MAX_SPEED = 0.65;     // Significantly capped normal speed
-  const POWER_MAX_SPEED = 1.1; // Capped power speed
+  const ACCELERATION = 0.04;
+  const FRICTION = 0.88;
+  const MAX_SPEED = 0.65;
+  const POWER_MAX_SPEED = 1.1;
 
   const gameRunning = useRef(false);
   const keys = useRef<{ [key: string]: boolean }>({});
@@ -74,15 +73,15 @@ const Arcade: React.FC = () => {
     { x: 0, y: 80, w: 45 },
     { x: 55, y: 65, w: 25 },
     { x: 90, y: 50, w: 20 },
-    { x: 120, y: 75, w: 80 }, // Longer platform
+    { x: 120, y: 75, w: 80 },
     { x: 210, y: 60, w: 30 },
-    { x: 250, y: 80, w: 100 }, // Long bridge
+    { x: 250, y: 80, w: 100 },
     { x: 360, y: 60, w: 25 },
     { x: 395, y: 45, w: 20 },
     { x: 425, y: 75, w: 60 },
-    { x: 500, y: 80, w: 150 }, // The Great Wall
+    { x: 500, y: 80, w: 150 },
     { x: 670, y: 60, w: 40 },
-    { x: 730, y: 50, w: 200 }, // Endgame long path
+    { x: 730, y: 50, w: 200 },
   ]);
 
   const [renderState, setRenderState] = useState({
@@ -98,11 +97,11 @@ const Arcade: React.FC = () => {
     coinsRef.current = [
       { x: 58, y: 55, collected: false, type: 'coin' },
       { x: 95, y: 40, collected: false, type: 'coin' },
-      { x: 150, y: 65, collected: false, type: 'power' }, // Power up!
+      { x: 150, y: 65, collected: false, type: 'power' },
       { x: 215, y: 50, collected: false, type: 'coin' },
       { x: 300, y: 70, collected: false, type: 'coin' },
       { x: 410, y: 35, collected: false, type: 'coin' },
-      { x: 520, y: 70, collected: false, type: 'power' }, // Another one
+      { x: 520, y: 70, collected: false, type: 'power' },
       { x: 600, y: 70, collected: false, type: 'coin' },
       { x: 700, y: 50, collected: false, type: 'coin' },
     ];
@@ -138,7 +137,6 @@ const Arcade: React.FC = () => {
       const p = playerRef.current;
       const speedLimit = p.isPowered ? POWER_MAX_SPEED : MAX_SPEED;
 
-      // Horizontal movement with momentum
       const moveRight = keys.current['ArrowRight'] || keys.current['KeyD'] || keys.current['BtnRight'];
       const moveLeft = keys.current['ArrowLeft'] || keys.current['KeyA'] || keys.current['BtnLeft'];
 
@@ -158,11 +156,9 @@ const Arcade: React.FC = () => {
         }
       }
 
-      // Cap horizontal speed
       p.vx = Math.max(-speedLimit, Math.min(speedLimit, p.vx));
       p.x += p.vx;
 
-      // Vertical movement / Gravity
       const isJumpPressed = keys.current['Space'] || keys.current['ArrowUp'] || keys.current['KeyW'] || keys.current['BtnJump'];
       
       if (isJumpPressed && !p.isJumping) {
@@ -170,15 +166,13 @@ const Arcade: React.FC = () => {
         p.isJumping = true;
       }
 
-      // Variable jump height (Mario-style)
       if (!isJumpPressed && p.vy < -3) {
-        p.vy *= 0.5; // Cut jump short if released
+        p.vy *= 0.5;
       }
 
       p.vy += GRAVITY;
       p.y += p.vy;
 
-      // Collision Detection
       let onPlatform = false;
       for (const plat of platforms.current) {
         const withinPlatformX = p.x + 4 > plat.x && p.x - 4 < plat.x + plat.w;
@@ -193,13 +187,12 @@ const Arcade: React.FC = () => {
       }
       p.isJumping = !onPlatform;
 
-      // Obstacle Movement & Collision
       obstaclesRef.current.forEach(obs => {
         if (obs.type === 'ground') {
-          obs.x += 0.18 * obs.dir; // Slower enemies
+          obs.x += 0.18 * obs.dir;
           if (Math.abs(obs.x - obs.startX) > obs.range) obs.dir *= -1;
         } else {
-          obs.x += 0.25 * obs.dir; // Slower enemies
+          obs.x += 0.25 * obs.dir;
           if (Math.abs(obs.x - obs.startX) > obs.range) obs.dir *= -1;
           const phase = (obs as any).phase || 0;
           obs.y = 25 + Math.sin(Date.now() / 400 + phase) * 12;
@@ -207,10 +200,9 @@ const Arcade: React.FC = () => {
         
         const dx = Math.abs(obs.x - p.x);
         const dy = Math.abs(obs.y - (p.y - 5));
-        if (dx < 4 && dy < 7) {
+        if (dx < 5 && dy < 8) {
           if (p.isPowered) {
-            // Smash enemy if powered
-            obs.y = 200; // Knock off screen
+            obs.y = 200;
             setScore(s => s + 500);
           } else {
             handleGameOver();
@@ -220,14 +212,12 @@ const Arcade: React.FC = () => {
 
       if (p.y > 120) { handleGameOver(); return; }
 
-      // Camera Follow
       const targetCam = p.x - 45;
       cameraRef.current += (targetCam - cameraRef.current) * 0.1;
       cameraRef.current = Math.max(0, cameraRef.current);
 
-      // Collectibles
       coinsRef.current.forEach(c => {
-        if (!c.collected && Math.abs(c.x - p.x) < 5 && Math.abs(c.y - p.y) < 10) {
+        if (!c.collected && Math.abs(c.x - p.x) < 6 && Math.abs(c.y - p.y) < 12) {
           c.collected = true;
           if (c.type === 'coin') {
             setScore(s => s + 100);
@@ -239,7 +229,6 @@ const Arcade: React.FC = () => {
         }
       });
 
-      // Power Up Expiry
       if (p.isPowered && Date.now() > p.powerTimeout) {
         p.isPowered = false;
         setPowerTimeLeft(0);
@@ -274,186 +263,127 @@ const Arcade: React.FC = () => {
       <div className="max-w-6xl w-full flex flex-col items-center justify-center relative z-10">
         <header className="text-center mb-10">
           <div className="inline-block bg-black text-white px-6 py-2 font-black uppercase text-xl mb-4 rotate-[-1deg] shadow-[6px_6px_0px_#00A1FF]">
-            NEURAL ARCADE V5.1
+            NEURAL ARCADE V5.2
           </div>
           <h2 className="text-5xl sm:text-7xl md:text-[8rem] font-black uppercase tracking-tighter leading-none">
             ACTION <span className="text-white" style={{ WebkitTextStroke: '2px black', textShadow: '8px 8px 0px #FF4B4B' }}>BASTION</span>
           </h2>
         </header>
 
-        <div className="w-full max-w-[1000px] aspect-[16/9] bg-[#111] border-[12px] border-black rounded-[4rem] shadow-[40px_40px_0px_#000] relative overflow-hidden flex flex-col p-4">
+        {/* Optimized Game Container for all screens */}
+        <div className="w-full max-w-[1000px] aspect-[4/5] sm:aspect-[16/9] bg-[#111] border-[8px] sm:border-[12px] border-black rounded-[2rem] sm:rounded-[4rem] shadow-[15px_15px_0px_#000] sm:shadow-[40px_40px_0px_#000] relative overflow-hidden flex flex-col p-2 sm:p-4">
           
-          <div className="flex-1 rounded-[3rem] bg-gradient-to-b from-sky-400 to-sky-200 overflow-hidden relative border-4 border-black/30 crt-screen">
-            {/* Parallax Background */}
-            <div 
-              className="absolute inset-0 opacity-20 pointer-events-none"
-              style={{ transform: `translateX(-${renderState.cameraX * 0.3}%)` }}
-            >
-               <div className="absolute bottom-0 w-[500%] h-32 bg-sky-900 clip-path-city"></div>
-            </div>
-
+          <div className="flex-1 rounded-[1.5rem] sm:rounded-[3rem] bg-gradient-to-b from-sky-400 to-sky-200 overflow-hidden relative border-2 sm:border-4 border-black/30 crt-screen">
             <div 
               className="absolute inset-0 transition-transform duration-75 ease-out"
               style={{ transform: `translateX(-${renderState.cameraX}%)` }}
             >
-              {/* Decorative Clouds */}
-              {[10, 80, 180, 280, 380, 480, 580, 680].map(x => (
-                <div key={x} className="absolute text-7xl opacity-40 select-none animate-pulse" style={{ left: `${x}%`, top: `${15 + (x % 20)}%` }}>☁️</div>
-              ))}
-
-              {/* Platforms / Walls */}
               {platforms.current.map((p, i) => (
                 <div 
                   key={i}
-                  className="absolute bg-[#3E2723] border-[6px] border-black shadow-[inset_0_4px_0_rgba(255,255,255,0.2)]"
+                  className="absolute bg-[#3E2723] border-[4px] sm:border-[6px] border-black"
                   style={{ left: `${p.x}%`, top: `${p.y}%`, width: `${p.w}%`, height: '200%' }}
                 >
-                  <div className="w-full h-8 bg-emerald-500 border-b-4 border-black"></div>
-                  <div className="w-full h-full opacity-20 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(0,0,0,0.4)_20px,rgba(0,0,0,0.4)_22px)]"></div>
+                  <div className="w-full h-4 sm:h-8 bg-emerald-500 border-b-2 sm:border-b-4 border-black"></div>
                 </div>
               ))}
 
-              {/* Collectibles */}
               {renderState.coins.map((c, i) => !c.collected && (
                 <div 
                   key={i}
-                  className={`absolute text-5xl flex flex-col items-center justify-center animate-bounce`}
-                  style={{ left: `${c.x}%`, top: `${c.y-10}%`, transform: 'translateX(-50%)' }}
+                  className={`absolute text-3xl sm:text-5xl flex flex-col items-center justify-center animate-bounce`}
+                  style={{ left: `${c.x}%`, top: `${c.y-8}%`, transform: 'translateX(-50%)' }}
                 >
-                  <span className={c.type === 'power' ? 'drop-shadow-[0_0_15px_#FFD600] scale-125' : ''}>
-                    {c.type === 'coin' ? '💎' : '⭐'}
-                  </span>
-                  {c.type === 'power' && <span className="text-[10px] font-black uppercase bg-black text-white px-1 mt-1">POWER</span>}
+                  <span>{c.type === 'coin' ? '💎' : '⭐'}</span>
                 </div>
               ))}
 
-              {/* Obstacles */}
               {renderState.obstacles.map((obs, i) => (
                 <div 
                   key={i}
-                  className="absolute w-[6%] h-[10%] flex flex-col items-center justify-center text-6xl"
+                  className="absolute w-[10%] sm:w-[6%] h-[12%] sm:h-[10%] flex flex-col items-center justify-center text-4xl sm:text-6xl"
                   style={{ left: `${obs.x}%`, top: `${obs.y}%`, transform: 'translate(-50%, -100%)' }}
                 >
-                  <div className="animate-bounce" style={{ animationDuration: '0.8s' }}>
+                  <div className="animate-bounce">
                     {obs.type === 'fly' ? '👾' : '😈'}
                   </div>
                 </div>
               ))}
 
-              {/* Player Sprite */}
               <div 
                 className="absolute"
                 style={{ 
                   left: `${renderState.player.x}%`, 
                   top: `${renderState.player.y}%`, 
                   transform: `translate(-50%, -100%) scaleX(${renderState.player.facing === 'left' ? -1 : 1})`,
-                  width: '6%',
-                  height: '14%',
+                  width: '14%', 
+                  height: '20%', 
                   zIndex: 50
                 }}
               >
-                <NeuralNinja 
-                  facing={renderState.player.facing} 
-                  isWalking={renderState.player.isWalking} 
-                  isJumping={renderState.player.isJumping} 
-                  isPowered={renderState.player.isPowered}
-                />
+                 <NeuralNinja 
+                    facing={renderState.player.facing} 
+                    isWalking={renderState.player.isWalking} 
+                    isJumping={renderState.player.isJumping} 
+                    isPowered={renderState.player.isPowered}
+                  />
               </div>
             </div>
 
             {/* UI Overlay */}
-            <div className="absolute top-10 left-10 right-10 z-[110] flex justify-between pointer-events-none items-start">
-              <div className="flex flex-col gap-2">
-                <div className="bg-black text-white px-6 py-2 font-black text-3xl border-4 border-white shadow-[8px_8px_0px_#000] rotate-[-1deg]">
-                  DATA: {score}
-                </div>
-                {powerTimeLeft > 0 && (
-                  <div className="bg-[#FFD600] text-black px-4 py-1 font-black text-xl border-4 border-black animate-pulse rotate-1">
-                    BASTION MODE: {powerTimeLeft}s
-                  </div>
-                )}
+            <div className="absolute top-4 sm:top-8 left-4 sm:left-8 right-4 sm:right-8 z-[110] flex justify-between pointer-events-none items-start">
+              <div className="bg-black text-white px-3 sm:px-6 py-1 sm:py-2 font-black text-lg sm:text-3xl border-2 sm:border-4 border-white shadow-[4px_4px_0px_#000]">
+                {score}
               </div>
-              <div className="bg-white border-4 border-black px-6 py-2 font-black text-3xl shadow-[8px_8px_0px_#000] rotate-[1deg]">
+              <div className="bg-white border-2 sm:border-4 border-black px-3 sm:px-6 py-1 sm:py-2 font-black text-lg sm:text-3xl shadow-[4px_4px_0px_#000]">
                 PEAK: {highScore}
               </div>
             </div>
 
-            {/* Start Screen */}
+            {/* Screens */}
             {gameState === 'START' && (
-              <div className="absolute inset-0 z-[150] bg-black/80 flex items-center justify-center backdrop-blur-md p-6">
-                <div className="bg-white border-[12px] border-black p-12 shadow-[30px_30px_0px_#FFD600] text-center rotate-1 w-full max-w-lg">
-                  <h3 className="text-8xl font-black mb-6 italic tracking-tighter uppercase">READY?</h3>
-                  <div className="grid grid-cols-2 gap-8 mb-12 text-left">
-                    <div className="bg-gray-100 p-4 border-4 border-black font-black uppercase">
-                       <p className="text-blue-600">Move:</p> Arrows / WASD
-                    </div>
-                    <div className="bg-gray-100 p-4 border-4 border-black font-black uppercase">
-                       <p className="text-red-600">Jump:</p> Space (Hold for higher)
-                    </div>
-                  </div>
-                  <button 
-                    onClick={startGame}
-                    className="cartoon-btn w-full bg-black text-white py-8 font-black text-5xl uppercase tracking-tighter"
-                  >
-                    DEPLOY!
-                  </button>
+              <div className="absolute inset-0 z-[150] bg-black/80 flex items-center justify-center p-4">
+                <div className="bg-white border-[8px] border-black p-6 sm:p-12 shadow-[15px_15px_0px_#FFD600] text-center rotate-1 w-full max-w-lg">
+                  <h3 className="text-5xl sm:text-8xl font-black mb-4 italic uppercase leading-none">READY?</h3>
+                  <button onClick={startGame} className="cartoon-btn w-full bg-black text-white py-4 sm:py-8 font-black text-3xl sm:text-5xl uppercase">DEPLOY!</button>
                 </div>
               </div>
             )}
 
-            {/* Game Over Screen */}
             {gameState === 'GAMEOVER' && (
-              <div className="absolute inset-0 z-[150] bg-red-600/80 flex items-center justify-center backdrop-blur-md p-6">
-                <div className="bg-white border-[12px] border-black p-12 shadow-[30px_30px_0px_#000] text-center -rotate-1 w-full max-w-lg">
-                  <h3 className="text-7xl font-black mb-4 italic tracking-tighter uppercase text-red-600">CRASHED</h3>
-                  <p className="text-4xl font-black mb-12 text-gray-800 uppercase">SCORE: {score}</p>
-                  <button 
-                    onClick={startGame}
-                    className="cartoon-btn w-full bg-[#00A1FF] text-white py-8 font-black text-5xl uppercase tracking-tighter"
-                  >
-                    REBOOT
-                  </button>
+              <div className="absolute inset-0 z-[150] bg-red-600/80 flex items-center justify-center p-4">
+                <div className="bg-white border-[8px] border-black p-6 sm:p-12 shadow-[15px_15px_0px_#000] text-center -rotate-1 w-full max-w-lg">
+                  <h3 className="text-4xl sm:text-7xl font-black mb-4 text-red-600 uppercase leading-none">SYSTEM CRASHED</h3>
+                  <button onClick={startGame} className="cartoon-btn w-full bg-[#00A1FF] text-white py-4 sm:py-8 font-black text-3xl sm:text-5xl uppercase">REBOOT</button>
                 </div>
               </div>
             )}
             
-            {/* On-Screen Controls */}
-            <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end z-[200] pointer-events-none">
-              <div className="flex gap-6 pointer-events-auto">
+            {/* Optimized Mobile Controls - Semi-transparent and out of the way */}
+            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-[200] pointer-events-none">
+              <div className="flex gap-4 pointer-events-auto">
                 <button 
                   onPointerDown={() => setKey('BtnLeft', true)}
                   onPointerUp={() => setKey('BtnLeft', false)}
-                  className="w-24 h-24 bg-black/60 border-4 border-white/50 rounded-3xl flex items-center justify-center text-white text-5xl active:scale-90 transition-all backdrop-blur-md"
-                >
-                  ◀
-                </button>
+                  className="w-16 h-16 bg-white/20 backdrop-blur-md border-4 border-white/50 rounded-2xl flex items-center justify-center text-white text-3xl active:scale-90"
+                >◀</button>
                 <button 
                   onPointerDown={() => setKey('BtnRight', true)}
                   onPointerUp={() => setKey('BtnRight', false)}
-                  className="w-24 h-24 bg-black/60 border-4 border-white/50 rounded-3xl flex items-center justify-center text-white text-5xl active:scale-90 transition-all backdrop-blur-md"
-                >
-                  ▶
-                </button>
+                  className="w-16 h-16 bg-white/20 backdrop-blur-md border-4 border-white/50 rounded-2xl flex items-center justify-center text-white text-3xl active:scale-90"
+                >▶</button>
               </div>
               <div className="pointer-events-auto">
                 <button 
                   onPointerDown={() => setKey('BtnJump', true)}
                   onPointerUp={() => setKey('BtnJump', false)}
-                  className="w-32 h-32 bg-[#FF4B4B] border-[8px] border-black rounded-full flex items-center justify-center text-white font-black text-4xl shadow-[0_12px_0_#000] active:shadow-none active:translate-y-3 transition-all"
-                >
-                  JUMP
-                </button>
+                  className="w-20 h-20 bg-[#FF4B4B]/80 border-[4px] border-black rounded-full flex items-center justify-center text-white font-black text-xl shadow-[0_4px_0_#000] active:translate-y-1 active:shadow-none"
+                >JUMP</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        .clip-path-city {
-          clip-path: polygon(0% 100%, 0% 40%, 5% 40%, 5% 20%, 10% 20%, 10% 50%, 15% 50%, 15% 10%, 20% 10%, 20% 40%, 25% 40%, 25% 30%, 30% 30%, 30% 60%, 35% 60%, 35% 20%, 40% 20%, 40% 45%, 45% 45%, 45% 5%, 50% 5%, 50% 35%, 55% 35%, 55% 55%, 60% 55%, 60% 15%, 65% 15%, 65% 40%, 70% 40%, 70% 25%, 75% 25%, 75% 50%, 80% 50%, 80% 10%, 85% 10%, 85% 45%, 90% 45%, 90% 30%, 95% 30%, 95% 60%, 100% 60%, 100% 100%);
-        }
-      `}</style>
     </section>
   );
 };
