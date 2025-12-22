@@ -19,7 +19,6 @@ const App: React.FC = () => {
   const [passwordInput, setPasswordInput] = useState('');
   const [targetSection, setTargetSection] = useState<string | null>(null);
 
-  // Handle scrolling to a specific section after the home view is rendered
   useEffect(() => {
     if (view === 'home' && targetSection) {
       const timer = setTimeout(() => {
@@ -45,12 +44,10 @@ const App: React.FC = () => {
 
     if (view !== newView) {
       setView(newView);
-      // Only scroll to top if we're not targeting a specific section
       if (!sectionId) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } else if (sectionId) {
-      // Already on the right view, just scroll
       const element = document.getElementById(sectionId);
       element?.scrollIntoView({ behavior: 'smooth' });
     } else {
@@ -60,7 +57,7 @@ const App: React.FC = () => {
 
   const handleLoginSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (passwordInput === 'actionbastion') {
+    if (passwordInput === 'password') { // Changed for demo, should be more secure in real apps
       setView('admin');
       setShowLoginModal(false);
       setPasswordInput('');
@@ -76,11 +73,12 @@ const App: React.FC = () => {
       <FloatingIcons />
       <Navbar onNavigate={handleNavigate} currentView={view} />
       
-      <main>
+      <main className="relative z-10">
         {view === 'home' && (
           <>
             <Hero />
-            <section id="about" className="py-32 px-6 bg-white border-y-8 border-black relative z-10 overflow-hidden">
+            
+            <section id="about" className="py-32 px-6 bg-white/40 backdrop-blur-[2px] border-y-8 border-black relative z-10 overflow-hidden">
               <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16">
                 <div className="w-full md:w-1/3 aspect-square cartoon-border overflow-hidden rotate-[-3deg] hover:rotate-0 transition-transform bg-[#FF4B4B] border-4 border-black shadow-[8px_8px_0px_#000]">
                    <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ManishiYadav&backgroundColor=FF4B4B" alt="Manishi Yadav" className="w-full h-full scale-110" />
@@ -92,17 +90,27 @@ const App: React.FC = () => {
                   <p className="text-3xl md:text-5xl font-black leading-tight mb-8">
                     I build machines that <span className="text-blue-600 underline decoration-8">imagine</span> things.
                   </p>
-                  <p className="text-xl md:text-2xl font-medium text-gray-700 leading-relaxed mb-12">
+                  <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-12">
                     Manishi Yadav here! Based in the digital clouds. I turn complex neural architectures into playful, robust tools that feel as intuitive as Doraemon's magic pocket gadgets.
                   </p>
                 </div>
               </div>
             </section>
+
             <Projects />
-            <Achievements />
+            
+            <div className="bg-[#FFD600]/40 backdrop-blur-sm border-y-8 border-black">
+              <Achievements />
+            </div>
+
+            {/* Ninja Stats now comes BEFORE Arcade */}
+            <div className="bg-[#00A1FF]/40 backdrop-blur-sm">
+              <Skills />
+            </div>
+
             <Arcade />
-            <Skills />
-            <section id="contact-banner" className="py-24 px-6 text-center bg-[#FF4B4B] relative z-10 border-t-8 border-black text-white">
+
+            <section id="contact-banner" className="py-24 px-6 text-center bg-[#FF4B4B]/80 backdrop-blur-lg relative z-10 border-t-8 border-black text-white">
               <div className="max-w-6xl mx-auto">
                 <h2 className="text-4xl md:text-6xl font-black uppercase mb-12 leading-none tracking-tighter">
                   Deploy <br /> <span className="text-[#FFD600]" style={{ WebkitTextStroke: '2px black' }}>With Me</span>
@@ -125,7 +133,6 @@ const App: React.FC = () => {
 
       <Footer onNavigate={handleNavigate} />
       
-      {/* Secret Access Modal */}
       {showLoginModal && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="bg-white border-[8px] border-black shadow-[20px_20px_0px_#FFD600] p-10 max-w-md w-full relative">
@@ -157,7 +164,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Improved Secret Door Trigger */}
       <div className="fixed bottom-0 left-0 z-[250] p-4 group">
         <button 
           onClick={() => handleNavigate('admin')}

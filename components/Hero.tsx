@@ -3,7 +3,7 @@ import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <section className="min-h-screen pt-32 md:pt-40 pb-20 px-4 md:px-6 flex flex-col items-center justify-center relative overflow-hidden bg-[#FFF9E6]">
+    <section className="min-h-screen pt-32 md:pt-40 pb-20 px-4 md:px-6 flex flex-col items-center justify-center relative overflow-hidden bg-transparent">
       <div className="max-w-6xl w-full text-center z-10">
         <div className="inline-block bg-[#FF4B4B] text-white px-4 md:px-6 py-2 text-sm md:text-lg font-black cartoon-btn mb-6 md:mb-10 rotate-[-2deg] shadow-[4px_4px_0px_#000] cursor-default">
           HI! I'M MANISHI YADAV
@@ -34,11 +34,11 @@ const Hero: React.FC = () => {
         </div>
       </div>
       
-      {/* Responsive decorative icons */}
-      <div className="absolute top-[15%] left-[5%] w-20 h-20 md:w-32 md:h-32 floating opacity-40 md:opacity-100">
+      {/* Foreground decorative icons to complement background ones */}
+      <div className="absolute top-[15%] left-[5%] w-20 h-20 md:w-32 md:h-32 floating opacity-40 md:opacity-100 z-20">
         <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Shinchan&backgroundColor=FFD600" alt="Shinchan" className="w-full h-full object-contain filter drop-shadow-lg" />
       </div>
-      <div className="absolute top-[20%] right-[5%] w-24 h-24 md:w-40 md:h-40 floating opacity-40 md:opacity-100" style={{ animationDelay: '1.5s' }}>
+      <div className="absolute top-[20%] right-[5%] w-24 h-24 md:w-40 md:h-40 floating opacity-40 md:opacity-100 z-20" style={{ animationDelay: '1.5s' }}>
         <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Doraemon&backgroundColor=00A1FF" alt="Doraemon" className="w-full h-full object-contain filter drop-shadow-lg" />
       </div>
     </section>
