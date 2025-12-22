@@ -22,7 +22,7 @@ const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index: number }> = ({
   return (
     <div 
       onMouseMove={handleMouseMove}
-      className="flex-shrink-0 w-[95vw] md:w-[90vw] h-[85vh] flex items-center justify-center px-4 md:px-12 relative group"
+      className="flex-shrink-0 w-[90vw] h-[80vh] flex items-center justify-center px-4 md:px-12 relative group"
       style={{ perspective: '2000px' }}
     >
       <div 
@@ -91,6 +91,7 @@ const Projects: React.FC = () => {
       const rect = sectionRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const totalDist = rect.height - windowHeight;
+      // Ensure progress starts at 0 and ends at 1
       const progress = Math.min(Math.max(-rect.top / totalDist, 0), 1);
       setScrollProgress(progress);
     };
@@ -99,14 +100,14 @@ const Projects: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // THREE-PHASE ANIMATION LOGIC
-  // 0.00 -> 0.15 : ARRIVAL (Title is centered, big, and static)
-  // 0.15 -> 0.45 : PINNING (Title moves from center to sidebar)
-  // 0.45 -> 1.00 : GALLERY (Projects scroll horizontally)
+  // THREE-PHASE SCROLL LOGIC
+  // 1. ARRIVAL: 0.00 -> 0.20 (Nothing moves, title centered)
+  // 2. PINNING: 0.20 -> 0.45 (Title moves to sidebar)
+  // 3. GALLERY: 0.45 -> 1.00 (Gallery scrolls horizontally)
 
   let pinProgress = 0;
-  if (scrollProgress > 0.15) {
-    pinProgress = Math.min((scrollProgress - 0.15) / 0.30, 1);
+  if (scrollProgress > 0.20) {
+    pinProgress = Math.min((scrollProgress - 0.20) / 0.25, 1);
   }
 
   let galleryProgress = 0;
@@ -114,18 +115,22 @@ const Projects: React.FC = () => {
     galleryProgress = Math.min((scrollProgress - 0.45) / 0.55, 1);
   }
 
-  // Visual interpolations for the "WORKS" title
+  // Animation values for the "WORKS" title
   const titleX = 50 - (pinProgress * 44); // 50% (center) -> 6% (sidebar)
-  const titleScale = 1 - (pinProgress * 0.55); // 1.0 (banner) -> 0.45 (sidebar)
+  const titleScale = 1 - (pinProgress * 0.55); // 1.0 -> 0.45
   const titleRotation = pinProgress * -90; // 0deg -> -90deg
   
-  const horizontalMove = galleryProgress * 100;
+  // Math to prevent empty space:
+  // (3 projects * 90vw) + 1 fin_card (50vw) + 10vw gap = ~330vw total content
+  // We start translation from 100vw. We want to end at -230vw so the right edge is at 100vw.
+  const translationDistance = 330; 
+  const currentTranslate = 100 - (galleryProgress * translationDistance);
 
   return (
     <section 
       ref={sectionRef}
       id="projects" 
-      className="relative h-[700vh] bg-[#FFF9E6] border-y-8 border-black"
+      className="relative h-[600vh] bg-[#FFF9E6] border-y-8 border-black"
     >
       {/* Background Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none sticky top-0 h-screen"
@@ -135,7 +140,7 @@ const Projects: React.FC = () => {
 
       <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
         
-        {/* THE "WORKS" HEADER - STAYS CENTERED UNTIL 15% SCROLL */}
+        {/* THE "WORKS" HEADER */}
         <div 
           className="absolute z-[60] pointer-events-none flex items-center justify-center whitespace-nowrap"
           style={{ 
@@ -155,32 +160,36 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        {/* PROJECTS ROW - STAYS HIDDEN/STATIC UNTIL PINNING IS COMPLETE */}
+        {/* PROJECTS ROW - Hides until Act 2 begins to keep focus on Banner */}
         <div 
-          className="flex items-center h-full pl-[12vw] transition-transform duration-100 ease-out"
+          className="flex items-center h-full transition-all duration-75 ease-out"
           style={{ 
-            transform: `translateX(calc(100vw - ${horizontalMove * 1.9}%))` 
+            transform: `translateX(${currentTranslate}vw)`,
+            opacity: pinProgress > 0 ? 1 : 0,
+            visibility: pinProgress > 0 ? 'visible' : 'hidden'
           }}
         >
           {PROJECTS.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
           
-          <div className="flex-shrink-0 w-[50vw] flex items-center justify-center">
-            <div className="bg-white border-[12px] border-black p-16 rotate-3 shadow-[30px_30px_0px_#FFD600] text-center">
-              <h4 className="text-6xl md:text-8xl font-black uppercase tracking-tighter italic mb-4">FIN_DATA</h4>
-              <p className="font-bold text-2xl uppercase tracking-widest text-[#FF4B4B]">Action Bastion Sequence Complete!</p>
+          <div className="flex-shrink-0 w-[50vw] flex items-center justify-center ml-10">
+            <div className="bg-white border-[12px] border-black p-12 md:p-16 rotate-3 shadow-[30px_30px_0px_#FFD600] text-center">
+              <h4 className="text-5xl md:text-8xl font-black uppercase tracking-tighter italic mb-4">FIN_DATA</h4>
+              <p className="font-bold text-xl md:text-2xl uppercase tracking-widest text-[#FF4B4B]">Sequence Complete!</p>
             </div>
           </div>
         </div>
 
-        {/* PROGRESS INDICATOR - SHOWS GALLERY PERCENTAGE */}
+        {/* PROGRESS INDICATOR */}
         <div className="absolute bottom-12 right-12 flex flex-col items-end gap-2 z-[70] pointer-events-none">
-           <span className="font-black uppercase text-[10px] tracking-widest bg-black text-white px-3 py-1">Gallery: {Math.round(galleryProgress * 100)}%</span>
+           <span className="font-black uppercase text-[10px] tracking-widest bg-black text-white px-3 py-1">
+             {scrollProgress < 0.2 ? 'System Ready' : scrollProgress < 0.45 ? 'Syncing...' : `Intel: ${Math.round(galleryProgress * 100)}%`}
+           </span>
            <div className="w-48 h-3 border-[3px] border-black bg-white shadow-[4px_4px_0px_#000] overflow-hidden">
               <div 
                 className="h-full bg-[#00A1FF] transition-all duration-100 ease-out"
-                style={{ width: `${galleryProgress * 100}%` }}
+                style={{ width: `${scrollProgress * 100}%` }}
               ></div>
            </div>
         </div>
