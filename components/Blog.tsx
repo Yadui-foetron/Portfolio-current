@@ -5,6 +5,13 @@ import { BlogPost, BlogSection } from '../types';
 
 const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
   switch (section.type) {
+    case 'heading':
+      return <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mt-12 mb-6 text-black leading-none">{section.content}</h2>;
+    
+    case 'subheading':
+      return <h3 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mt-10 mb-4 text-[#FF4B4B]">{section.content}</h3>;
+    
+    case 'paragraph':
     case 'text':
     case 'markdown':
       return <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-8">{section.content}</p>;
@@ -44,8 +51,8 @@ const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
       return (
         <div className="my-10 bg-[#FFD600] border-[4px] border-black p-8 shadow-[10px_10px_0px_#000] -rotate-1 relative group hover:rotate-0 transition-transform">
           <div className="absolute -top-6 -left-6 text-5xl group-hover:scale-125 transition-transform">📌</div>
-          <h4 className="font-black uppercase text-xl mb-2 underline decoration-4">Gadget Insight:</h4>
-          <p className="font-bold text-xl italic">{section.content}</p>
+          <h4 className="font-black uppercase text-xl mb-2 underline decoration-4 text-black">Gadget Insight:</h4>
+          <p className="font-bold text-xl italic text-black">{section.content}</p>
         </div>
       );
 
@@ -63,7 +70,6 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setBlogs(getBlogs());
   }, []);
 
-  // FIXED: Scroll to top when opening a post
   useEffect(() => {
     if (selectedPost) {
       window.scrollTo(0, 0);
@@ -90,7 +96,7 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <span className="px-6 py-2 bg-[#FF4B4B] text-white border-4 border-black font-black uppercase text-lg shadow-[6px_6px_0px_#000] inline-block -rotate-2">
               {selectedPost.category}
             </span>
-            <h1 className="text-5xl md:text-8xl font-black uppercase mt-8 leading-[0.85] tracking-tighter">
+            <h1 className="text-5xl md:text-8xl font-black uppercase mt-8 leading-[0.85] tracking-tighter text-black">
               {selectedPost.title}
             </h1>
             <div className="flex items-center gap-4 mt-6">
@@ -112,7 +118,7 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             
             <div className="pt-20 mt-20 border-t-[8px] border-black text-center">
               <div className="text-8xl mb-4">🏮</div>
-              <p className="font-black uppercase text-2xl tracking-tighter italic">
+              <p className="font-black uppercase text-2xl tracking-tighter italic text-black">
                 Transmission Terminated.
               </p>
               <button 
@@ -142,7 +148,7 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             >
               ← Back to Lab
             </button>
-            <h1 className="text-6xl md:text-[10rem] font-black uppercase tracking-tighter leading-none">
+            <h1 className="text-6xl md:text-[10rem] font-black uppercase tracking-tighter leading-none text-black">
               GOSSIP <br /> <span className="text-[#FF4B4B]" style={{ WebkitTextStroke: '2px black' }}>LOGS</span>
             </h1>
           </header>

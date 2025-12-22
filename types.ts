@@ -1,6 +1,6 @@
 
 export interface BlogSection {
-  type: 'text' | 'markdown' | 'image' | 'code' | 'note';
+  type: 'heading' | 'subheading' | 'paragraph' | 'markdown' | 'image' | 'code' | 'note' | 'text';
   content: string;
   caption?: string;
   language?: string;
