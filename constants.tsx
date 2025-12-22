@@ -1,5 +1,5 @@
 
-import { Project, Experience, Skill } from './types';
+import { Project, Experience, Skill, BlogPost } from './types';
 
 export const PROJECTS: Project[] = [
   {
@@ -36,18 +36,30 @@ export const SKILLS: Skill[] = [
   { name: 'React/Frontend', level: 80 }
 ];
 
-export const EXPERIENCES: Experience[] = [
+export const BLOG_POSTS: BlogPost[] = [
   {
-    role: 'Senior GenAI Engineer',
-    company: 'Future Mind Labs',
-    period: '2023 - Present',
-    description: 'Developing multi-agent systems and fine-tuning models for creative industries.'
+    id: '1',
+    title: 'The Secret Life of LLMs',
+    date: 'Oct 12, 2024',
+    excerpt: 'Exploring how hidden states in transformers resemble 90s cartoon logic.',
+    category: 'AI Research',
+    color: '#FF4B4B'
   },
   {
-    role: 'AI Research Lead',
-    company: 'Neural Toons',
-    period: '2021 - 2023',
-    description: 'Led research into controllable image generation for automated animation workflows.'
+    id: '2',
+    title: 'Doraemon\'s Pocket: A RAG Story',
+    date: 'Sept 28, 2024',
+    excerpt: 'How to build retrieval systems that feel like magic gadget pockets.',
+    category: 'Engineering',
+    color: '#00A1FF'
+  },
+  {
+    id: '3',
+    title: 'Shinchan\'s Guide to Prompting',
+    date: 'Aug 15, 2024',
+    excerpt: 'Mischievous techniques for getting the most out of large language models.',
+    category: 'Prompt Eng',
+    color: '#FFD600'
   }
 ];
 
