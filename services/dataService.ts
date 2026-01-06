@@ -2,8 +2,8 @@
 import { BlogPost, Achievement } from '../types';
 import { BLOG_POSTS as INITIAL_BLOGS, ACHIEVEMENTS as INITIAL_ACHIEVEMENTS } from '../constants';
 
-const BLOGS_KEY = 'manishi_portfolio_blogs';
-const ACHIEVEMENTS_KEY = 'manishi_portfolio_achievements';
+const BLOGS_KEY = 'Manish_portfolio_blogs';
+const ACHIEVEMENTS_KEY = 'Manish_portfolio_achievements';
 
 export const getBlogs = (): BlogPost[] => {
   const stored = localStorage.getItem(BLOGS_KEY);

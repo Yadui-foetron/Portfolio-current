@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
-import { getBlogs, addBlog, deleteBlog, getAchievements, addAchievement, deleteAchievement } from '../services/dataService';
-import { BlogPost, Achievement } from '../types';
+import { getPosts, createPost, deletePost, BlogPost } from '../services/blogService';
+import { getAchievements, addAchievement, deleteAchievement } from '../services/dataService'; // Keep achievements mock for now or move it too? Assuming user only asked about blog.
+import { Achievement } from '../types';
 
 const Admin: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [tab, setTab] = useState<'blogs' | 'achievements'>('blogs');
@@ -38,9 +38,14 @@ const Admin: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   });
 
   useEffect(() => {
-    setBlogs(getBlogs());
+    refreshData();
     setAchievements(getAchievements());
   }, []);
+
+  const refreshData = async () => {
+      const posts = await getPosts();
+      setBlogs(posts);
+  };
 
   useEffect(() => {
     if (toast) {
@@ -82,7 +87,7 @@ const Admin: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   };
 
-  const handleSaveBlog = () => {
+  const handleSaveBlog = async () => {
     const newErrors: { [key: string]: boolean } = {};
     if (!newBlog.title.trim()) newErrors.title = true;
     if (!newBlog.sectionsJSON.trim() || newBlog.sectionsJSON.trim() === '[]') newErrors.sectionsJSON = true;
@@ -95,29 +100,51 @@ const Admin: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
     try {
       const parsedSections = JSON.parse(newBlog.sectionsJSON);
-      const blog: BlogPost = {
-        id: Date.now().toString(),
-        title: newBlog.title,
-        category: newBlog.category,
-        excerpt: newBlog.excerpt,
-        sections: parsedSections,
-        color: newBlog.color,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      };
-      setBlogs(addBlog(blog));
-      setNewBlog({ 
-        title: '', 
-        category: 'Engineering', 
-        excerpt: '', 
-        sectionsJSON: '[\n  ' + TEMPLATES.heading + ',\n  ' + TEMPLATES.paragraph + '\n]', 
-        color: '#FF4B4B' 
+      
+      const success = await createPost({
+          title: newBlog.title,
+          category: newBlog.category,
+          excerpt: newBlog.excerpt,
+          sections: parsedSections,
+          color: newBlog.color,
+          content: '',
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          image: '', // Default or parsed from sections?
+          readTime: '5 min', // Calculate?
+          tags: [],
+          author: 'Manishi Yadav'
       });
-      setErrors({});
-      showFeedback("MISSION ACCOMPLISHED: Blog Deployed! 🚀✨");
+
+      if (success) {
+          await refreshData();
+          setNewBlog({ 
+            title: '', 
+            category: 'Engineering', 
+            excerpt: '', 
+            sectionsJSON: '[\n  ' + TEMPLATES.heading + ',\n  ' + TEMPLATES.paragraph + '\n]', 
+            color: '#FF4B4B' 
+          });
+          setErrors({});
+          showFeedback("MISSION ACCOMPLISHED: Blog Deployed! 🚀✨");
+      } else {
+          showFeedback("DEPLOYMENT FAILED! Check console! 🛑", "error");
+      }
     } catch (e) {
       setErrors({ sectionsJSON: true });
       showFeedback("JSON CRASH! Check your brackets/commas! 🤖💥", "error");
     }
+  };
+  
+  const handleDeleteBlog = async (id: number) => {
+      if(window.confirm('Delete this entry?')) {
+          const success = await deletePost(id);
+          if (success) {
+              await refreshData();
+              showFeedback("ENTRY DELETED! 🗑️");
+          } else {
+              showFeedback("DELETE FAILED! 🛑", "error");
+          }
+      }
   };
 
   const handleSaveAch = () => {
@@ -244,7 +271,7 @@ const Admin: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {blogs.map(blog => (
                   <div key={blog.id} className="bg-white border-4 border-black p-4 flex justify-between items-center shadow-[4px_4px_0px_#000]">
                     <div className="truncate font-black uppercase text-sm text-black">{blog.title}</div>
-                    <button onClick={() => { if(window.confirm('Delete this entry?')) setBlogs(deleteBlog(blog.id)); }} className="w-8 h-8 bg-red-100 text-red-600 border-2 border-black font-black">×</button>
+                    <button onClick={() => handleDeleteBlog(blog.id)} className="w-8 h-8 bg-red-100 text-red-600 border-2 border-black font-black">×</button>
                   </div>
                 ))}
               </div>

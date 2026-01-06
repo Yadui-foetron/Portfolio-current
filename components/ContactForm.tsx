@@ -25,7 +25,7 @@ const ContactForm: React.FC = () => {
       <div className="bg-white border-[6px] md:border-[8px] border-black p-8 md:p-12 shadow-[15px_15px_0px_#000] md:shadow-[20px_20px_0px_#000] rotate-1 animate-in zoom-in duration-300 text-black mx-auto max-w-xl">
         <div className="text-6xl md:text-8xl mb-6">🚀</div>
         <h3 className="text-3xl md:text-4xl font-black uppercase mb-4 italic">Action Bastion!</h3>
-        <p className="text-lg md:text-xl font-bold text-gray-700">Message beamed to Manishi's Lab. Expect a ping soon!</p>
+        <p className="text-lg md:text-xl font-bold text-gray-700">Message beamed to Manish's Lab. Expect a ping soon!</p>
         <button 
           onClick={() => setFormState('idle')}
           className="mt-10 cartoon-btn bg-black text-white px-8 py-3 font-black uppercase w-full sm:w-auto"
