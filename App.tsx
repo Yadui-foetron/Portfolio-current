@@ -1,36 +1,20 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
 import FloatingIcons from './components/FloatingIcons';
 import GeminiBot from './components/GeminiBot';
-import Arcade from './components/Arcade';
 import Footer from './components/Footer';
 import Blog from './components/Blog';
 import Admin from './components/Admin';
-import Achievements from './components/Achievements';
-import ContactForm from './components/ContactForm';
+import Home from './components/Home';
 
-const App: React.FC = () => {
-  const [view, setView] = useState<'home' | 'blog' | 'admin'>('home');
+const AppContent: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const [targetSection, setTargetSection] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (view === 'home' && targetSection) {
-      const timer = setTimeout(() => {
-        const element = document.getElementById(targetSection);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-          setTargetSection(null);
-        }
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [view, targetSection]);
 
   const handleNavigate = (newView: 'home' | 'blog' | 'admin', sectionId?: string) => {
     if (newView === 'admin') {
@@ -38,28 +22,34 @@ const App: React.FC = () => {
       return;
     }
 
-    if (sectionId) {
-      setTargetSection(sectionId);
+    if (newView === 'blog') {
+       navigate('/blog');
+       window.scrollTo({ top: 0, behavior: 'instant' });
+       return;
     }
 
-    if (view !== newView) {
-      setView(newView);
-      // Ensure we go to top when switching views
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    } else if (sectionId) {
-      const element = document.getElementById(sectionId);
-      element?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (newView === 'home') {
+      if (location.pathname !== '/') {
+         navigate('/');
+         if (sectionId) setTargetSection(sectionId);
+         else window.scrollTo({ top: 0, behavior: 'instant' });
+      } else {
+         if (sectionId) {
+           const element = document.getElementById(sectionId);
+           element?.scrollIntoView({ behavior: 'smooth' });
+         } else {
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+         }
+      }
     }
   };
 
   const handleLoginSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (passwordInput === '1234') { 
-      setView('admin');
       setShowLoginModal(false);
       setPasswordInput('');
+      navigate('/admin');
       window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
       alert("WRONG CODE! Ninja Hattori is watching you! 🥷");
@@ -70,63 +60,14 @@ const App: React.FC = () => {
   return (
     <div className="relative min-h-screen">
       <FloatingIcons />
-      <Navbar onNavigate={handleNavigate} currentView={view} />
+      <Navbar onNavigate={handleNavigate} currentView={location.pathname === '/blog' ? 'blog' : location.pathname === '/admin' ? 'admin' : 'home'} />
       
       <main className="relative z-10">
-        {view === 'home' && (
-          <>
-            <Hero />
-            
-            <section id="about" className="pt-20 pb-0 px-6 bg-white/40 backdrop-blur-[2px] border-t-8 border-black relative z-10 overflow-hidden">
-              <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16 pb-0">
-                <div className="w-full md:w-1/3 aspect-square cartoon-border overflow-hidden rotate-[-3deg] hover:rotate-0 transition-transform bg-[#FF4B4B] border-4 border-black shadow-[8px_8px_0px_#000]">
-                   <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=ManishiYadav&backgroundColor=FF4B4B" alt="Manishi Yadav" className="w-full h-full scale-110" />
-                </div>
-                <div className="flex-1 pb-16 md:pb-20">
-                  <div className="inline-block px-6 py-2 bg-yellow-400 border-4 border-black font-black uppercase text-xl mb-8 transform -rotate-1">
-                    The Architect
-                  </div>
-                  <p className="text-3xl md:text-5xl font-black leading-tight mb-8">
-                    I build machines that <span className="text-blue-600 underline decoration-8">imagine</span> things.
-                  </p>
-                  <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed">
-                    Manishi Yadav here! Based in the digital clouds. I turn complex neural architectures into playful, robust tools that feel as intuitive as Doraemon's magic pocket gadgets.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <Projects />
-            
-            <div className="bg-[#FFD600]/40 backdrop-blur-sm border-y-8 border-black">
-              <Achievements />
-            </div>
-
-            <div className="bg-[#00A1FF]/40 backdrop-blur-sm">
-              <Skills />
-            </div>
-
-            <Arcade />
-
-            <section id="contact-banner" className="py-24 px-6 text-center bg-[#FF4B4B]/80 backdrop-blur-lg relative z-10 border-t-8 border-black text-white">
-              <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl md:text-6xl font-black uppercase mb-12 leading-none tracking-tighter">
-                  Deploy <br /> <span className="text-[#FFD600]" style={{ WebkitTextStroke: '2px black' }}>With Me</span>
-                </h2>
-                
-                <ContactForm />
-
-                <div className="mt-20 flex flex-wrap justify-center gap-8 text-black font-black uppercase">
-                  <div className="bg-white border-4 border-black px-6 py-2 rotate-1">Available 24/7</div>
-                  <div className="bg-[#FFD600] border-4 border-black px-6 py-2 -rotate-1">Action Bastion Energy</div>
-                  <div className="bg-[#00A1FF] text-white border-4 border-black px-6 py-2 rotate-2">22nd Century Tech</div>
-                </div>
-              </div>
-            </section>
-          </>
-        )}
-        {view === 'blog' && <Blog onBack={() => handleNavigate('home')} />}
-        {view === 'admin' && <Admin onBack={() => handleNavigate('home')} />}
+        <Routes>
+          <Route path="/" element={<Home targetSection={targetSection} setTargetSection={setTargetSection} />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/admin" element={<Admin onBack={() => handleNavigate('home')} />} />
+        </Routes>
       </main>
 
       <Footer onNavigate={handleNavigate} />
@@ -164,7 +105,7 @@ const App: React.FC = () => {
 
       <div className="fixed bottom-0 left-0 z-[250] p-4 group">
         <button 
-          onClick={() => handleNavigate('admin')}
+          onClick={() => setShowLoginModal(true)}
           className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black text-white text-[10px] px-3 py-2 font-black uppercase border-2 border-white shadow-[4px_4px_0px_#FFD600] cursor-pointer"
         >
           Open Secret Lab
@@ -173,6 +114,14 @@ const App: React.FC = () => {
       
       <GeminiBot />
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 };
 

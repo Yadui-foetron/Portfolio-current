@@ -19,7 +19,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     <footer className="bg-black text-white pt-20 pb-10 px-6 relative overflow-hidden border-t-8 border-black">
       {/* Background oversized name */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[12vw] font-black text-white/5 uppercase select-none pointer-events-none whitespace-nowrap">
-        MANISHI YADAV
+        Manish YADAV
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -77,10 +77,10 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="w-full h-px bg-white/20 mb-8"></div>
         <div className="overflow-hidden whitespace-nowrap mb-8 select-none">
           <div className="inline-block animate-[marquee_20s_linear_infinite] text-sm font-black uppercase tracking-[0.3em] text-gray-400">
-            LLM ARCHITECT • AGENTIC WORKFLOWS • VISUAL AI • ACTION BASTION • DORAEMON TECH • MANISHI YADAV •&nbsp;
+            LLM ARCHITECT • AGENTIC WORKFLOWS • VISUAL AI • ACTION BASTION • DORAEMON TECH • Manish YADAV •&nbsp;
           </div>
           <div className="inline-block animate-[marquee_20s_linear_infinite] text-sm font-black uppercase tracking-[0.3em] text-gray-400">
-            LLM ARCHITECT • AGENTIC WORKFLOWS • VISUAL AI • ACTION BASTION • DORAEMON TECH • MANISHI YADAV •&nbsp;
+            LLM ARCHITECT • AGENTIC WORKFLOWS • VISUAL AI • ACTION BASTION • DORAEMON TECH • Manish YADAV •&nbsp;
           </div>
         </div>
 
@@ -92,7 +92,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
 
           <div className="flex flex-col items-center text-center">
-            <div className="text-xl font-black uppercase tracking-tight">© {new Date().getFullYear()} MANISHI YADAV</div>
+            <div className="text-xl font-black uppercase tracking-tight">© {new Date().getFullYear()} Manish YADAV</div>
             <div className="text-[9px] font-black uppercase tracking-[0.2em] text-gray-600 mt-1">Built with high-frequency energy</div>
           </div>
 

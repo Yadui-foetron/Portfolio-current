@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { getBlogs } from '../services/dataService';
-import { BlogPost, BlogSection } from '../types';
+import { useNavigate } from 'react-router-dom';
+import { getPosts, BlogPost } from '../services/blogService';
+import { BlogSection } from '../types';
 
 const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
   switch (section.type) {
@@ -32,7 +33,7 @@ const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
 
     case 'code':
       return (
-        <div className="my-10 bg-[#1A1A1A] border-[4px] border-black rounded-xl overflow-hidden shadow-[10px_10px_0px_#000] relative">
+        <div className="my-10 bg-[#1A1A1A] border-4 border-black rounded-xl overflow-hidden shadow-[10px_10px_0px_#000] relative">
           <div className="bg-white border-b-4 border-black px-4 py-2 flex items-center justify-between">
             <div className="flex gap-2">
               <div className="w-3 h-3 bg-red-500 rounded-full border-2 border-black"></div>
@@ -49,7 +50,7 @@ const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
 
     case 'note':
       return (
-        <div className="my-10 bg-[#FFD600] border-[4px] border-black p-8 shadow-[10px_10px_0px_#000] -rotate-1 relative group hover:rotate-0 transition-transform">
+        <div className="my-10 bg-[#FFD600] border-4 border-black p-8 shadow-[10px_10px_0px_#000] -rotate-1 relative group hover:rotate-0 transition-transform">
           <div className="absolute -top-6 -left-6 text-5xl group-hover:scale-125 transition-transform">📌</div>
           <h4 className="font-black uppercase text-xl mb-2 underline decoration-4 text-black">Gadget Insight:</h4>
           <p className="font-bold text-xl italic text-black">{section.content}</p>
@@ -61,13 +62,18 @@ const SectionRenderer: React.FC<{ section: BlogSection }> = ({ section }) => {
   }
 };
 
-const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+const Blog: React.FC = () => {
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    setBlogs(getBlogs());
+    const fetchBlogs = async () => {
+        const posts = await getPosts();
+        setBlogs(posts);
+    };
+    fetchBlogs();
   }, []);
 
   useEffect(() => {
@@ -76,14 +82,19 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   }, [selectedPost]);
 
-  const filteredBlogs = blogs.filter(b => 
-    b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    b.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBlogs = blogs.filter(b => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      b.title.toLowerCase().includes(searchLower) ||
+      (b as any).category?.toLowerCase().includes(searchLower) ||
+      b.excerpt.toLowerCase().includes(searchLower) ||
+      (b.tags && b.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+    );
+  });
 
   if (selectedPost) {
     return (
-      <div className="min-h-screen bg-white pt-32 pb-20 px-6 animate-in slide-in-from-bottom duration-500">
+      <div className="min-h-screen bg-white pt-48 pb-20 px-6 animate-in slide-in-from-bottom duration-500">
         <div className="max-w-4xl mx-auto">
           <button 
             onClick={() => setSelectedPost(null)}
@@ -94,7 +105,7 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           
           <div className="mb-16">
             <span className="px-6 py-2 bg-[#FF4B4B] text-white border-4 border-black font-black uppercase text-lg shadow-[6px_6px_0px_#000] inline-block -rotate-2">
-              {selectedPost.category}
+              {(selectedPost as any).category || 'Blog'}
             </span>
             <h1 className="text-5xl md:text-8xl font-black uppercase mt-8 leading-[0.85] tracking-tighter text-black">
               {selectedPost.title}
@@ -106,17 +117,15 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
 
           <div className="space-y-4">
-            {selectedPost.sections ? (
-              selectedPost.sections.map((section, i) => (
-                <SectionRenderer key={i} section={section} />
+            {selectedPost.sections && selectedPost.sections.length > 0 ? (
+              selectedPost.sections.map((section, idx) => (
+                <SectionRenderer key={idx} section={section} />
               ))
             ) : (
-              selectedPost.content?.split('\n').map((para, i) => (
-                <p key={i} className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-8">{para}</p>
-              ))
+              <p className="text-xl md:text-2xl font-medium text-gray-800 leading-relaxed mb-8">{selectedPost.content}</p>
             )}
             
-            <div className="pt-20 mt-20 border-t-[8px] border-black text-center">
+            <div className="pt-20 mt-20 border-t-8 border-black text-center">
               <div className="text-8xl mb-4">🏮</div>
               <p className="font-black uppercase text-2xl tracking-tighter italic text-black">
                 Transmission Terminated.
@@ -138,12 +147,12 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF9E6] pt-32 pb-20 px-6">
+    <div className="min-h-screen bg-[#FFF9E6] pt-48 pb-20 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8">
           <header>
             <button 
-              onClick={onBack}
+              onClick={() => navigate('/')}
               className="cartoon-btn bg-white text-black px-6 py-2 font-black mb-8 uppercase"
             >
               ← Back to Lab
@@ -174,9 +183,9 @@ const Blog: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             >
               <div 
                 className="w-full h-12 mb-6 border-b-4 border-black font-black uppercase flex items-center justify-between"
-                style={{ color: post.color }}
+                style={{ color: (post as any).color || '#000' }}
               >
-                <span>{post.category}</span>
+                <span>{(post as any).category || 'Blog'}</span>
                 <span className="text-xs text-gray-400">{post.date}</span>
               </div>
               <h3 className="text-3xl font-black uppercase mb-4 leading-tight group-hover:text-[#FF4B4B] transition-colors text-black">
